@@ -183,19 +183,23 @@
 
     // 2. Función que se ejecuta al detectar el código
     function onScanSuccess(decodedText) {
-        console.log(`URL detectada: ${decodedText}`);
-        
-        // Detener la cámara para ahorrar batería
-        html5QrcodeScanner.clear();
-
-        // Ocultar la zona de escaneo y mostrar la del modelo 3D
-        document.getElementById('scanner-view').style.display = 'none';
-        document.getElementById('model-view').style.display = 'block';
-
-        // Asignar la URL del QR (enlace .glb de GitHub) al visor
-        const viewer = document.getElementById('viewer');
-        viewer.src = decodedText;
+    // Limpiamos el texto por si tiene espacios
+    let cleanLink = decodedText.trim();
+    
+    // Si el link viene de la barra de GitHub (con /blob/), lo corregimos automáticamente
+    if (cleanLink.includes("github.com") && cleanLink.includes("/blob/")) {
+        cleanLink = cleanLink.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
     }
+
+    console.log(`Cargando modelo corregido: ${cleanLink}`);
+    
+    html5QrcodeScanner.clear();
+    document.getElementById('scanner-view').style.display = 'none';
+    document.getElementById('model-view').style.display = 'block';
+
+    const viewer = document.getElementById('viewer');
+    viewer.src = cleanLink; // Asignamos el link limpio
+}
 
     // 3. Renderizar el escáner al cargar la página
     html5QrcodeScanner.render(onScanSuccess);
