@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escanear Modelo 3D - Estilo Dashboard</title>
+    
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Visor <b>3D AR</b></h1>
+        </header>
+
+        <div id="scanner-view">
+            <div id="reader"></div>
+            <p style="margin-top: 15px; font-size: 0.9rem; color: #555;">
+                Escanea el código QR de tu modelo en GitHub
+            </p>
+        </div>
+
+        <div id="model-view" style="display: block;">
+            <model-viewer 
+                id="viewer"
+                src="https://raw.githubusercontent.com/JulioCallejas72/mi-proyecto-3d/Principal/TuberiaMario.glb" 
+                ar 
+                ar-modes="webxr scene-viewer quick-look" 
+                camera-controls 
+                shadow-intensity="1" 
+                auto-rotate>
+                
+                <button slot="ar-button" class="ar-button">
+                    📷 VER EN TU ESPACIO
+                </button>
+            </model-viewer>
+            
+            <button id="btn-reload" class="action-button">Escanear otro código</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="02-dashboard.html" class="nav-item">
+            <span>🏠</span><span class="nav-label">Inicio</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <span>📷</span><span class="nav-label">Escanear</span>
+        </a>
+        <a href="04-passport.html" class="nav-item">
+            <span>🗺️</span><span class="nav-label">Pasaporte</span>
+        </a>
+        <a href="10-perfil.html" class="nav-item">
+            <span>👤</span><span class="nav-label">Perfil</span>
+        </a>
+    </nav>
+
+    <style>
+    :root {
+        --primary-teal: #4db6ac;
+        --nav-bg: #ffffff;
+        --text-dark: #333;
+        --card-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text-dark);
+        padding-bottom: 100px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: url('Fondo_Blanco_AzulMaya.png'); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    /* Contenedor Translúcido principal */
+    .container {
+        width: 90%;
+        max-width: 500px;
+        padding: 40px;
+        background-color: rgba(255, 255, 255, 0.70); 
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        backdrop-filter: blur(8px);
+        text-align: center;
+    }
+
+    /* Estilos del Visualizador 3D */
+    model-viewer {
+        width: 100%;
+        height: 350px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        margin-bottom: 20px;
+    }
+
+    .ar-button {
+        background-color: var(--primary-teal);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: bold;
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .action-button {
+        background: var(--text-dark);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    /* Estilos del Escáner QR */
+    #reader {
+        width: 100% !important;
+        border: none !important;
+        border-radius: 20px;
+        overflow: hidden;
+        background: white;
+    }
+
+    /* Bottom Nav original */
+    nav.bottom-nav {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        background: var(--nav-bg);
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+        z-index: 1000;
+        border-top: 1px solid #eee;
+    }
+
+    .nav-item {
+        font-size: 1.6rem;
+        color: #aaa;
+        cursor: pointer;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    .nav-item.active {
+        color: var(--text-dark);
+        background: #f0f0f0;
+        border-radius: 20px;
+    }
+
+    .nav-label { font-size: 10px; font-weight: bold; margin-top: 4px; }
+</style>
+
+    <script>
+    // 1. Inicializar el escáner
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", 
+        { 
+            fps: 10, 
+            qrbox: {width: 250, height: 250},
+            aspectRatio: 1.0 
+        }
+    );
+
+    // 2. Función que se ejecuta al detectar el código
+    function onScanSuccess(decodedText) {
+        console.log(`URL detectada: ${decodedText}`);
+        
+        // Detener la cámara para ahorrar batería
+        html5QrcodeScanner.clear();
+
+        // Ocultar la zona de escaneo y mostrar la del modelo 3D
+        document.getElementById('scanner-view').style.display = 'none';
+        document.getElementById('model-view').style.display = 'block';
+
+        // Asignar la URL del QR (enlace .glb de GitHub) al visor
+        const viewer = document.getElementById('viewer');
+        viewer.src = decodedText;
+    }
+
+    // 3. Renderizar el escáner al cargar la página
+    html5QrcodeScanner.render(onScanSuccess);
+
+    // 4. Lógica para el botón de reiniciar (escanear otro)
+    document.getElementById('btn-reload').addEventListener('click', () => {
+        location.reload(); // Recarga la página para resetear el estado
+    });
+
+    // 5. Lógica de navegación visual (active class)
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>
