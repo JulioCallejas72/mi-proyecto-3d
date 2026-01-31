@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorando Barcelona - Dashboard Escalable</title>
+    <style>
+        /* --- CSS: Estilos Base --- */
+        :root {
+            --primary-teal: #4db6ac;
+            --nav-bg: #ffffff;
+            --text-dark: #333;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            padding-bottom: 100px;
+            min-height: 100vh;
+            /* Imagen de fondo basada en tu configuración previa */
+            background-image: url('Fondo_Blanco_AzulMaya.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Contenedor principal con transparencia al 0.75 */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.75); 
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 { font-size: 2.8rem; margin: 0; font-weight: 300; }
+        header h1 b { font-weight: 700; display: block; }
+
+        .header-icons {
+            display: flex;
+            gap: 25px;
+            font-size: 1.8rem;
+            color: var(--primary-teal);
+        }
+
+        /* Filtros */
+        .filters { display: flex; gap: 15px; margin-bottom: 40px; }
+        .chip {
+            padding: 10px 25px;
+            border-radius: 25px;
+            background: #fff;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .chip.active { background-color: var(--primary-teal); color: white; }
+
+        /* --- MODIFICACIÓN: HILERA ESCALABLE --- */
+        .featured-row {
+            display: flex;            /* Alinea los elementos en una fila */
+            overflow-x: auto;         /* Permite scroll horizontal si hay muchas imágenes */
+            gap: 25px;                /* Espacio constante entre tarjetas */
+            padding: 10px 5px 20px 5px; 
+            margin-bottom: 40px;
+            scrollbar-width: thin;    /* Estilo de scroll para Firefox */
+        }
+
+        /* Estilo de la barra de scroll para Chrome/Safari */
+        .featured-row::-webkit-scrollbar { height: 6px; }
+        .featured-row::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+
+        .card {
+            flex: 0 0 220px;          /* No permite que la tarjeta se encoja, mantiene 220px de ancho */
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            aspect-ratio: 4/5;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card-title {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Categorías */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            background: rgba(244, 244, 244, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            gap: 15px;
+            cursor: pointer; /* Añadido para indicar que es clickeable */
+            transition: background 0.3s ease;
+        }
+
+        .category-item:hover {
+            background: rgba(255, 255, 255, 0.9); /* Efecto visual al pasar el mouse */
+        }
+
+        .cat-icon {
+            font-size: 1.8rem;
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        /* Barra de navegación */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--nav-bg);
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            z-index: 1000;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-item { font-size: 1.8rem; color: #aaa; cursor: pointer; padding: 12px; }
+        .nav-item.active { color: #333; background: #f0f0f0; border-radius: 50%; }
+        .nav-item.special { color: #222; border: 2px solid #333; border-radius: 50%; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <h1>Lugares <b>A Descubrir</b></h1>
+            </div>
+            <div class="header-icons">
+                <span>🔍</span> <span>🗺️</span>
+            </div>
+        </header>
+
+        <section class="filters">
+            <div class="chip active">Cerca de mí</div>
+            <div class="chip">Museos</div>
+            <div class="chip">Parques</div>
+        </section>
+
+        <section>
+            <h2>Destacados para ti</h2>
+            <div class="featured-row" id="featuredContainer">
+                </div>
+        </section>
+
+        <section>
+            <h2>Lista de Categorías</h2>
+            <div class="categories-grid">
+                <div class="category-item"> <span class="cat-icon">🗺️</span> <span>Lugares</span> </div>
+                <div class="category-item"> <span class="cat-icon">👑</span> <span>Contenido educativo</span> </div>
+                <div class="category-item"> <span class="cat-icon">🏆</span> <span>Logros</span> </div>
+                <div class="category-item"> <span class="cat-icon">🏪</span> <span>Tienda</span> </div>
+            </div>
+        </section>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active">🏠</div>
+        <div class="nav-item">📄</div>
+        <div class="nav-item special">📷</div>
+        <div class="nav-item">🔍</div>
+        <div class="nav-item">👤</div>
+    </nav>
+
+    <script>
+        /* --- JAVASCRIPT: Gestión Dinámica de Imágenes --- */
+        
+        const destacados = [
+            { titulo: 'Sagrada Familia', imagen: 'https://images.unsplash.com/photo-1583778175739-99419161276a?w=400' },
+            { titulo: 'Museo Parqüell', imagen: 'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?w=400' },
+            { titulo: 'Casa Batlló', imagen: 'https://images.unsplash.com/photo-1543731068-7e0f5beff43a?w=400' },
+            { titulo: 'La Pedrera', imagen: 'https://images.unsplash.com/photo-1511527661048-7fe73d85e9a4?w=400' }
+        ];
+
+        function cargarDestacados() {
+            const contenedor = document.getElementById('featuredContainer');
+            contenedor.innerHTML = destacados.map(item => `
+                <div class="card">
+                    <img src="${item.imagen}" alt="${item.titulo}">
+                    <div class="card-title">${item.titulo}</div>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarDestacados();
+
+            const chips = document.querySelectorAll('.chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                });
+            });
+
+            // --- LÓGICA DE NAVEGACIÓN DE LA BARRA INFERIOR ---
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    switch(index) {
+                        case 0:
+                            window.location.href = '02-dashboard.html';
+                            break;
+                        case 1:
+                            window.location.href = '11-MenuContenidoE.html';
+                            break;
+                        case 2:
+                            window.location.href = '03-scanner.html';
+                            break;
+                        case 3:
+                            window.location.href = '04-passport.html';
+                            break;
+                        case 4:
+                            window.location.href = '10-perfil.html';
+                            break;
+                    }
+                });
+            });
+
+            // --- NUEVO: LÓGICA DE NAVEGACIÓN PARA LA LISTA DE CATEGORÍAS ---
+            // Seleccionamos todos los elementos con la clase 'category-item'
+            const categoryItems = document.querySelectorAll('.category-item');
+            
+            categoryItems.forEach((item) => {
+                item.addEventListener('click', () => {
+                    // Obtenemos el texto dentro del span para saber qué categoría se presionó
+                    const categoria = item.querySelector('span:last-child').textContent.trim();
+                    
+                    // Switch para manejar los redireccionamientos según el nombre de la categoría
+                    switch(categoria) {
+                        case 'Logros':
+                            // Redirige a la página de logros como solicitaste
+                            window.location.href = '07-logros.html';
+                            break;
+                        case 'Lugares':
+                            // Redirige a la sección de lugares/mapa
+                            window.location.href = '06-lugares-desbloqueados.html';
+                            break;
+                        case 'Tienda':
+                            // Placeholder para la tienda
+                            window.location.href ='09-tienda.html';
+                            break;
+                        case 'Contenido educativo':
+                            // Placeholder para contenido educativo
+                            window.location.href ='05-educational-content.html';
+                            break;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

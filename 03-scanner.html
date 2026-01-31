@@ -23,25 +23,17 @@
             </p>
         </div>
 
-        <div id="model-view" style="display: none;">
-    
-            <div id="loading-screen">
-                <div class="spinner"></div>
-                <p>Preparando el modelo de <b>Xalapa</b>...</p>
-                </div>
-
-                <model-viewer 
-                id="viewer"
-                src=""  
-                ar 
-                ar-modes="webxr scene-viewer quick-look" 
-                camera-controls 
-                auto-rotate> 
+        <div id="model-view" style="display: none;"> <model-viewer 
+            id="viewer"
+            src=""  ar 
+            ar-modes="webxr scene-viewer quick-look" 
+            camera-controls 
+            auto-rotate> 
                 <button slot="ar-button" class="ar-button">
-                    📷 VER EN TU ESPACIO
-                 </button>
-         </model-viewer>
-    
+                📷 VER EN TU ESPACIO
+                </button>
+        </model-viewer>
+            
             <button id="btn-reload" class="action-button">Escanear otro código</button>
         </div>
     </div>
@@ -172,35 +164,6 @@
     }
 
     .nav-label { font-size: 10px; font-weight: bold; margin-top: 4px; }
-
-    #loading-screen {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 350px; /* Misma altura que tu model-viewer */
-    background: rgba(255, 255, 255, 0.9);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    border-radius: 20px;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid var(--primary-teal);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 15px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
 </style>
 
     <script>
@@ -249,31 +212,6 @@
             this.classList.add('active');
         });
     });
-
-
-    //asa
-    // Busca tu función onScanSuccess y añade estas líneas:
-    function onScanSuccess(decodedText) {
-        let cleanLink = decodedText.trim();
-        
-        if (cleanLink.includes("github.com") && cleanLink.includes("/blob/")) {
-            cleanLink = cleanLink.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
-        }
-
-        // Mostrar la vista del modelo y asegurar que el cargando sea visible
-        document.getElementById('scanner-view').style.display = 'none';
-        document.getElementById('model-view').style.display = 'block';
-        document.getElementById('loading-screen').style.display = 'flex';
-
-        const viewer = document.getElementById('viewer');
-        viewer.src = cleanLink;
-
-        // NUEVO: Detectar cuando el modelo terminó de cargar
-        viewer.addEventListener('load', () => {
-            console.log("Modelo cargado con éxito");
-            document.getElementById('loading-screen').style.display = 'none';
-        });
-    }
 </script>
 </body>
 </html>
