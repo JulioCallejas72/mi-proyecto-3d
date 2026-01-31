@@ -23,20 +23,16 @@
             </p>
         </div>
 
-        <div id="model-view" style="display: block;">
-            <model-viewer 
-                id="viewer"
-                src="https://juliocallejas72.github.io/mi-proyecto-3d/TuberiaMario.glb" 
-                ar 
-                ar-modes="webxr scene-viewer quick-look" 
-                camera-controls 
-                shadow-intensity="1" 
-                auto-rotate>
-    
+        <div id="model-view" style="display: none;"> <model-viewer 
+            id="viewer"
+            src=""  ar 
+            ar-modes="webxr scene-viewer quick-look" 
+            camera-controls 
+            auto-rotate> 
                 <button slot="ar-button" class="ar-button">
                 📷 VER EN TU ESPACIO
                 </button>
-</model-viewer>
+        </model-viewer>
             
             <button id="btn-reload" class="action-button">Escanear otro código</button>
         </div>
