@@ -6,7 +6,6 @@
     <title>Escanear Modelo 3D - Estilo Dashboard</title>
     
     <script src="https://unpkg.com/html5-qrcode"></script>
-    
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
@@ -18,21 +17,27 @@
 
         <div id="scanner-view">
             <div id="reader"></div>
-            <p style="margin-top: 15px; font-size: 0.9rem; color: #555;">
-                Escanea el código QR de tu modelo en GitHub
-            </p>
+            <p class="instruction-text">Apunta al código QR de tu modelo en GitHub</p>
         </div>
 
-        <div id="model-view" style="display: none;"> <model-viewer 
-            id="viewer"
-            src=""  ar 
-            ar-modes="webxr scene-viewer quick-look" 
-            camera-controls 
-            auto-rotate> 
-                <button slot="ar-button" class="ar-button">
-                📷 VER EN TU ESPACIO
-                </button>
-        </model-viewer>
+        <div id="model-view" style="display: none; position: relative;">
+            
+            <div id="loading-screen" style="display: none;">
+                <div class="spinner"></div>
+                <p>Descargando modelo...</p>
+            </div>
+
+            <div id="error-message" style="display: none;"></div>
+
+            <model-viewer 
+                id="viewer"
+                src="" 
+                ar 
+                ar-modes="webxr scene-viewer quick-look" 
+                camera-controls 
+                auto-rotate> 
+                <button slot="ar-button" class="ar-button">📷 VER EN TU ESPACIO</button>
+            </model-viewer>
             
             <button id="btn-reload" class="action-button">Escanear otro código</button>
         </div>
@@ -53,179 +58,137 @@
         </a>
     </nav>
 
+    <audio id="coin-sound" src="https://www.myinstants.com/media/sounds/super-mario-coin.mp3"></audio>
+
     <style>
     :root {
         --primary-teal: #4db6ac;
         --nav-bg: #ffffff;
         --text-dark: #333;
-        --card-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        --glass-bg: rgba(255, 255, 255, 0.70);
     }
 
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-        color: var(--text-dark);
-        padding-bottom: 100px;
+        margin: 0; padding: 0;
         min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-image: url('Fondo_Blanco_AzulMaya.png'); 
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
+        display: flex; align-items: center; justify-content: center;
+        background: url('Fondo_Blanco_AzulMaya.png') center/cover no-repeat fixed;
+        padding-bottom: 100px;
     }
 
-    /* Contenedor Translúcido principal */
     .container {
-        width: 90%;
-        max-width: 500px;
-        padding: 40px;
-        background-color: rgba(255, 255, 255, 0.70); 
+        width: 90%; max-width: 500px; padding: 40px;
+        background-color: var(--glass-bg);
         border-radius: 25px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         backdrop-filter: blur(8px);
         text-align: center;
     }
 
-    /* Estilos del Visualizador 3D */
+    #reader { border-radius: 20px; overflow: hidden; border: none !important; }
+
     model-viewer {
-        width: 100%;
-        height: 350px;
+        width: 100%; height: 350px;
         background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 20px;
-        margin-bottom: 20px;
+        border-radius: 20px; margin-bottom: 20px;
     }
+
+    /* Estilos del Spinner de Carga */
+    #loading-screen {
+        position: absolute; top: 0; left: 0; width: 100%; height: 350px;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        z-index: 10; border-radius: 20px;
+    }
+
+    .spinner {
+        width: 40px; height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--primary-teal);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 10px;
+    }
+
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    #error-message { color: #d32f2f; font-weight: bold; margin-bottom: 15px; }
 
     .ar-button {
-        background-color: var(--primary-teal);
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 25px;
-        font-weight: bold;
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        background-color: var(--primary-teal); color: white; border: none;
+        padding: 12px 20px; border-radius: 25px; font-weight: bold;
+        position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
     }
 
-    .action-button {
-        background: var(--text-dark);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 10px;
-        cursor: pointer;
-    }
+    .action-button { background: var(--text-dark); color: white; border: none; padding: 10px 20px; border-radius: 10px; }
 
-    /* Estilos del Escáner QR */
-    #reader {
-        width: 100% !important;
-        border: none !important;
-        border-radius: 20px;
-        overflow: hidden;
-        background: white;
-    }
-
-    /* Bottom Nav original */
+    /* Estilo de la Navegación */
     nav.bottom-nav {
-        position: fixed;
-        bottom: 0; left: 0; right: 0;
-        background: var(--nav-bg);
-        height: 80px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 50px;
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-        z-index: 1000;
-        border-top: 1px solid #eee;
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: var(--nav-bg); height: 80px;
+        display: flex; justify-content: center; align-items: center; gap: 50px;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000;
     }
 
-    .nav-item {
-        font-size: 1.6rem;
-        color: #aaa;
-        cursor: pointer;
-        padding: 12px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-decoration: none;
-    }
-
-    .nav-item.active {
-        color: var(--text-dark);
-        background: #f0f0f0;
-        border-radius: 20px;
-    }
-
+    .nav-item { text-decoration: none; color: #aaa; display: flex; flex-direction: column; align-items: center; }
+    .nav-item.active { color: var(--text-dark); background: #f0f0f0; border-radius: 15px; padding: 10px; }
     .nav-label { font-size: 10px; font-weight: bold; margin-top: 4px; }
 </style>
 
     <script>
-    // 1. Inicializar el escáner
+    // 1. Inicializar Escáner
     let html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader", 
-        { 
-            fps: 10, 
-            qrbox: {width: 250, height: 250},
-            aspectRatio: 1.0 
-        }
+        "reader", { fps: 15, qrbox: {width: 250, height: 250} }
     );
 
-    // 2. Función que se ejecuta al detectar el código
     function onScanSuccess(decodedText) {
-    let cleanLink = decodedText.trim();
-    
-    // Reproducir sonido y limpiar escáner
-    document.getElementById('coin-sound').play();
-    html5QrcodeScanner.clear();
-
-    // Mostrar interfaz de carga
-    document.getElementById('scanner-view').style.display = 'none';
-    document.getElementById('model-view').style.display = 'block';
-    document.getElementById('loading-screen').style.display = 'flex';
-    document.getElementById('error-message').style.display = 'none';
-
-    const viewer = document.getElementById('viewer');
-    viewer.src = cleanLink;
-
-    // Evento de Éxito
-    viewer.addEventListener('load', () => {
-        document.getElementById('loading-screen').style.display = 'none';
-        console.log("Carga exitosa de: " + cleanLink);
-    });
-
-    // Evento de Error Detallado
-    viewer.addEventListener('error', (event) => {
-        document.getElementById('loading-screen').style.display = 'none';
-        const errorDiv = document.getElementById('error-message');
-        errorDiv.style.display = 'block';
+        console.log("Detectado: " + decodedText);
         
-        // Esto te dirá en pantalla qué pasó exactamente
-        errorDiv.innerHTML = `<p>❌ Error de carga: No se pudo encontrar el modelo en el QR.</p>
-                              <small style="color:gray;">Link intentado: ${cleanLink}</small>`;
-    });
-}
+        // Reproducir sonido de moneda
+        const sound = document.getElementById('coin-sound');
+        if(sound) sound.play();
 
-    // 3. Renderizar el escáner al cargar la página
+        // Limpiar URL de GitHub
+        let cleanLink = decodedText.trim();
+        if (cleanLink.includes("github.com") && cleanLink.includes("/blob/")) {
+            cleanLink = cleanLink.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
+        }
+
+        // Alternar vistas
+        html5QrcodeScanner.clear();
+        document.getElementById('scanner-view').style.display = 'none';
+        document.getElementById('model-view').style.display = 'block';
+        
+        // Mostrar carga
+        const loader = document.getElementById('loading-screen');
+        if(loader) loader.style.display = 'flex';
+        document.getElementById('error-message').style.display = 'none';
+
+        // Cargar Modelo
+        const viewer = document.getElementById('viewer');
+        viewer.src = cleanLink;
+
+        // Ocultar carga al terminar
+        viewer.addEventListener('load', () => {
+            if(loader) loader.style.display = 'none';
+        });
+
+        // Manejar Errores
+        viewer.addEventListener('error', () => {
+            if(loader) loader.style.display = 'none';
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'block';
+            errorDiv.innerHTML = "❌ Error: El enlace del QR no contiene un modelo 3D válido.";
+        });
+    }
+
     html5QrcodeScanner.render(onScanSuccess);
 
-    // 4. Lógica para el botón de reiniciar (escanear otro)
+    // Botón Reload
     document.getElementById('btn-reload').addEventListener('click', () => {
-        location.reload(); // Recarga la página para resetear el estado
-    });
-
-    // 5. Lógica de navegación visual (active class)
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            this.classList.add('active');
-        });
+        location.reload();
     });
 </script>
 </body>
