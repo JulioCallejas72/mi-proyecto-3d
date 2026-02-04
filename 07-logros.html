@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR México - Logros</title>
+    
+    <style>
+        /* --- CSS: DISEÑO UNIFICADO (Estilo Dashboard) --- */
+        :root {
+            --primary-teal: #4db6ac;
+            --nav-bg: #ffffff;
+            --text-dark: #333;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            color: var(--text-dark);
+            padding-bottom: 100px;
+
+            /* FONDO: Imagen unificada con el resto de la app */
+            background-image: url('Fondo_Blanco_AzulMaya.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        
+        /* Header con transparencia */
+        .header {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-btn {
+            background: white;
+            border: 1px solid #ddd;
+            color: var(--text-dark);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 800;
+        }
+        
+        .total-badge {
+            background: var(--primary-teal);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        /* Stats Overview (Se quitaron XP y Racha) */
+        .stats-overview {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Solo dos columnas ahora */
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .stat-icon { font-size: 40px; margin-bottom: 10px; }
+        .stat-value { font-size: 28px; font-weight: 900; color: var(--primary-teal); }
+        .stat-label { font-size: 12px; color: #666; text-transform: uppercase; }
+        
+        /* Categorías con transparencia de Dashboard */
+        .categories-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .category-section {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .category-title { display: flex; align-items: center; gap: 15px; }
+        .category-icon { font-size: 30px; }
+        .category-name { font-size: 20px; font-weight: 800; }
+        
+        .progress-bar-container {
+            width: 120px;
+            height: 8px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary-teal);
+            border-radius: 10px;
+        }
+        
+        /* Achievements Grid */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .achievement-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            position: relative;
+        }
+        
+        .achievement-card.locked { opacity: 0.5; filter: grayscale(1); }
+        .achievement-badge { position: absolute; top: 10px; right: 10px; font-size: 20px; }
+        .achievement-icon { font-size: 50px; margin-bottom: 10px; }
+        .achievement-name { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+        .achievement-description { font-size: 12px; color: #777; line-height: 1.4; }
+        
+        /* --- BOTTOM NAVIGATION (Funcionalidad mantenida) --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background: var(--nav-bg);
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            background: none; border: none;
+            color: #aaa; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            padding: 5px 20px;
+        }
+        
+        .nav-btn.active { color: var(--text-dark); background: #f0f0f0; border-radius: 15px; }
+        .nav-icon { font-size: 22px; }
+        .nav-label { font-size: 10px; font-weight: 600; }
+
+        @media (max-width: 600px) {
+            .achievements-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="header">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <h1 class="header-title">🏆 LOGROS</h1>
+        <div class="total-badge" id="totalBadge">0/0</div>
+    </header>
+    
+    <section class="stats-overview">
+        <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-value" id="totalUnlocked">0</div>
+            <div class="stat-label">Desbloqueados</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value" id="completionRate">0%</div>
+            <div class="stat-label">Completado</div>
+        </div>
+    </section>
+    
+    <div class="categories-container" id="categoriesContainer">
+        </div>
+    
+    <nav class="bottom-nav">
+        <button class="nav-btn" onclick="goToDashboard()">
+            <span class="nav-icon">🏠</span><span class="nav-label">Inicio</span>
+        </button>
+        <button class="nav-btn" onclick="goToScanner()">
+            <span class="nav-icon">📷</span><span class="nav-label">Escanear</span>
+        </button>
+        <button class="nav-btn" onclick="goToPassport()">
+            <span class="nav-icon">🗺️</span><span class="nav-label">Pasaporte</span>
+        </button>
+        <button class="nav-btn" onclick="goToProfile()">
+            <span class="nav-icon">👤</span><span class="nav-label">Perfil</span>
+        </button>
+    </nav>
+    
+    <script>
+        const achievementCategories = {
+            collection: {
+                name: 'Explorador',
+                icon: '📍',
+                achievements: [
+                    { name: 'Primer Paso', desc: 'Escanea tu primer lugar', icon: '🎯', requirement: 1 },
+                    { name: 'Viajero', desc: 'Escanea 10 lugares', icon: '🗺️', requirement: 10 },
+                    { name: 'Maestro', desc: 'Escanea 25 lugares', icon: '🏆', requirement: 25 }
+                ]
+            }
+        };
+        
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            const scannedPlaces = JSON.parse(localStorage.getItem('scannedPlaces')) || [];
+            const userCount = scannedPlaces.length;
+            
+            let total = 0;
+            let unlocked = 0;
+
+            Object.keys(achievementCategories).forEach(catKey => {
+                const category = achievementCategories[catKey];
+                const unlockedInCategory = category.achievements.filter(ach => userCount >= ach.requirement).length;
+                
+                unlocked += unlockedInCategory;
+                total += category.achievements.length;
+
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                section.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-title">
+                            <div class="category-icon">${category.icon}</div>
+                            <div class="category-name">${category.name}</div>
+                        </div>
+                        <div>
+                            <span style="font-weight:bold">${unlockedInCategory}/${category.achievements.length}</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: ${(unlockedInCategory/category.achievements.length)*100}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="achievements-grid">
+                        ${category.achievements.map(ach => {
+                            const isUnlocked = userCount >= ach.requirement;
+                            return `
+                                <div class="achievement-card ${isUnlocked ? '' : 'locked'}">
+                                    <div class="achievement-badge">${isUnlocked ? '✅' : '🔒'}</div>
+                                    <div class="achievement-icon">${ach.icon}</div>
+                                    <div class="achievement-name">${ach.name}</div>
+                                    <div class="achievement-description">${ach.desc}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+
+            document.getElementById('totalBadge').textContent = `${unlocked}/${total}`;
+            document.getElementById('totalUnlocked').textContent = unlocked;
+            document.getElementById('completionRate').textContent = Math.round((unlocked / total) * 100) + '%';
+        }
+
+        document.addEventListener('DOMContentLoaded', renderCategories);
+
+        /* NAVEGACIÓN (Funcionalidad original) */
+        function goBack() { window.location.href = '02-dashboard.html'; }
+        function goToDashboard() { window.location.href = '02-dashboard.html'; }
+        function goToScanner() { window.location.href = '03-scanner.html'; }
+        function goToPassport() { window.location.href = '04-passport.html'; }
+        function goToProfile() { window.location.href = '10-perfil.html'; }
+    </script>
+</body>
+</html>

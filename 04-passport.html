@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Pasaporte AR - Mapa Ajustable</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        /* --- CSS: DISEÑO UNIFICADO Y AJUSTABLE --- */
+        :root {
+            --primary-teal: #4db6ac;
+            --nav-bg: #ffffff;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            padding-bottom: 100px; /* Espacio para la navegación inferior */
+            min-height: 100vh;
+
+            /* FONDO: Mosaico mexicano */
+            background-image: url('Fondo_Blanco_AzulMaya.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Contenedor Translúcido ajustable */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.75); 
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 { font-size: 2rem; margin: 0; font-weight: 300; }
+        header h1 b { font-weight: 700; }
+
+        /* --- MAPA AJUSTABLE --- */
+        #map {
+            width: 100%;
+            /* Altura ajustable basada en el alto de la pantalla (Viewport Height) */
+            height: 50vh; 
+            min-height: 350px; /* Altura mínima para que no se vea muy pequeño */
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 1; /* Asegura que no tape la navegación */
+        }
+
+        /* --- NAVEGACIÓN BOTTOM (CONSERVADA) --- */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--nav-bg);
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            z-index: 1000;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-item { font-size: 1.8rem; color: #aaa; cursor: pointer; padding: 12px; transition: 0.3s; }
+        .nav-item.active { color: #333; background: #f0f0f0; border-radius: 50%; border: 1px solid #ddd; }
+        .nav-item:hover { color: var(--primary-teal); }
+
+        /* Responsive para tablets y laptops pequeñas */
+        @media (max-width: 768px) {
+            .container { margin: 15px; padding: 20px; }
+            #map { height: 40vh; }
+            nav.bottom-nav { gap: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Mi <b>Pasaporte AR</b></h1>
+            <div style="font-size: 1.8rem;">🗺️</div>
+        </header>
+
+        <div id="map"></div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="window.location.href='02-dashboard.html'">🏠</div>
+        <div class="nav-item">📄</div>
+        <div class="nav-item" onclick="window.location.href='03-scanner.html'">📷</div>
+        <div class="nav-item active">🔍</div>
+        <div class="nav-item" onclick="window.location.href='10-perfil.html'">👤</div>
+    </nav>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DATOS PARA CARGAR EL MAPA ---
+            // 1. Inicializar el mapa en las coordenadas de CDMX
+            var map = L.map('map').setView([19.4326, -99.1332], 13);
+
+            // 2. Cargar las "tiles" (imágenes del mapa) de OpenStreetMap
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            // 3. Agregar un marcador de ejemplo
+            L.marker([19.4326, -99.1332]).addTo(map)
+                .bindPopup('<b>¡Bienvenido a México!</b><br>Explora tus lugares escaneados.')
+                .openPopup();
+
+            // Función para ajustar el mapa automáticamente si cambia el tamaño de la ventana
+            window.addEventListener('resize', function() {
+                map.invalidateSize();
+            });
+        });
+    </script>
+</body>
+</html>

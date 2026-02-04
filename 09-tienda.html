@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR México - Tienda Unificada</title>
+    
+    <style>
+        /* --- CSS: DISEÑO UNIFICADO (Estilo Dashboard) --- */
+        :root {
+            --primary-teal: #4db6ac;
+            --nav-bg: #ffffff;
+            --text-dark: #333;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            color: var(--text-dark);
+            padding-bottom: 100px;
+
+            /* FONDO: Imagen de mosaico unificada */
+            background-image: url('Fondo_Blanco_AzulMaya.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Contenedor Translúcido Principal */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.75); 
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .back-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        .header-title { font-size: 24px; font-weight: 300; }
+        .header-title b { font-weight: 700; }
+
+        .cart-btn {
+            background: var(--primary-teal);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -5px; right: -5px;
+            background: #ff5252;
+            color: white;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        /* Pestañas (Tabs) */
+        .tabs-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary-teal);
+            color: white;
+            border-color: var(--primary-teal);
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Estilos de Grids */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* --- ESTILOS TIENDA FÍSICA --- */
+        .state-card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #eee;
+            transition: 0.3s;
+        }
+        .state-card:hover { transform: translateY(-5px); }
+        .state-name { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .state-details { font-size: 0.9rem; color: #666; line-height: 1.4; }
+
+        /* --- ESTILOS TIENDA ONLINE --- */
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+        .product-image { height: 180px; background: #f9f9f9; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+        .product-info { padding: 20px; }
+        .product-price { color: var(--primary-teal); font-weight: 900; font-size: 1.4rem; margin: 10px 0; }
+        .buy-btn { width: 100%; padding: 10px; background: #eee; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
+        .buy-btn:hover { background: var(--primary-teal); color: white; }
+
+        /* Bottom Nav */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--nav-bg);
+            height: 80px;
+            gap: 60px;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+        
+        .nav-item { font-size: 1.8rem; color: #aaa; cursor: pointer; padding: 12px; text-decoration: none; }
+        .nav-item.active { color: #333; background: #f0f0f0; border-radius: 50%; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <header class="header">
+            <button class="back-btn" onclick="window.location.href='02-dashboard.html'">←</button>
+            <h1 class="header-title">Nuestra <b>Tienda</b></h1>
+            <button class="cart-btn">🛒 <span class="cart-badge" id="cartBadge">0</span></button>
+        </header>
+        
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="switchTab('physical', this)">📍 Tiendas Físicas</button>
+            <button class="tab-btn" onclick="switchTab('online', this)">🛒 Tienda Online</button>
+        </div>
+        
+        <div id="physical-tab" class="tab-content active">
+            <div class="grid-layout" id="statesGrid">
+                </div>
+        </div>
+        
+        <div id="online-tab" class="tab-content">
+            <div class="grid-layout" id="productsGrid">
+                </div>
+        </div>
+    </div>
+    
+    <nav class="bottom-nav">
+        <a href="02-dashboard.html" class="nav-item">🏠</a>
+        <a href="06-lugares-desbloqueados.html" class="nav-item">📄</a>
+        <a href="03-scanner.html" class="nav-item">📷</a>
+        <a href="04-passport.html" class="nav-item">🔍</a>
+        <a href="10-perfil.html" class="nav-item">👤</a>
+    </nav>
+    
+    <script>
+        // Datos de Tiendas por Estado
+        const statesData = [
+            { state: 'CDMX', icon: '🏙️', address: 'Centro Histórico, Coyoacán y Polanco.' },
+            { state: 'Jalisco', icon: '🎊', address: 'Guadalajara Centro y Tlaquepaque.' },
+            { state: 'Nuevo León', icon: '🏔️', address: 'Monterrey y San Pedro Garza García.' },
+            { state: 'Yucatán', icon: '🗿', address: 'Mérida Centro y alrededores de Chichén Itzá.' },
+            { state: 'Quintana Roo', icon: '🏖️', address: 'Cancún, Playa del Carmen y Tulum.' }
+        ];
+
+        const productsData = [
+            { name: 'Pack Pirámides AR', icon: '🏛️', price: 299 },
+            { name: 'Llavero Chichén Itzá', icon: '🗿', price: 149 },
+            { name: 'Pack Playas AR', icon: '🏖️', price: 299 }
+        ];
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId + '-tab').classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function renderStores() {
+            const grid = document.getElementById('statesGrid');
+            grid.innerHTML = statesData.map(s => `
+                <div class="state-card">
+                    <div class="state-name">${s.icon} ${s.state}</div>
+                    <div class="state-details">📍 Ubicaciones principales:<br>${s.address}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderOnline() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = productsData.map(p => `
+                <div class="product-card">
+                    <div class="product-image">${p.icon}</div>
+                    <div class="product-info">
+                        <div class="product-name"><b>${p.name}</b></div>
+                        <div class="product-price">$${p.price} MXN</div>
+                        <button class="buy-btn" onclick="addToCart()">Agregar al Carrito</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        let cartCount = 0;
+        function addToCart() {
+            cartCount++;
+            document.getElementById('cartBadge').textContent = cartCount;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStores();
+            renderOnline();
+        });
+    </script>
+</body>
+</html>
