@@ -221,11 +221,11 @@ nav.bottom-nav {
 
 /* Iconos de la Barra de Navegación */
 .nav-icon.png-emoji { width: 32px; height: 32px; }
-.icon-home { background-image: url('emoji_casa.png'); }
-.icon-docs { background-image: url('emoji_documento.png'); }
-.icon-eye { background-image: url('emoji_camara.png'); }
-.icon-search-nav { background-image: url('emoji_Lugares.png'); }
-.icon-profile { background-image: url('emoji_perfil.png'); }
+.icon-home { background-image: url('Emoji_Casa.png'); }
+.icon-docs { background-image: url('Emoji_Documento.png'); }
+.icon-eye { background-image: url('Emoji_Camara.png'); }
+.icon-search-nav { background-image: url('Emoji_Lugares.png'); }
+.icon-profile { background-image: url('Emoji_Perfil.png'); }
 
 /* ============================================================ */
 
@@ -273,6 +273,18 @@ header h1 b { font-weight: 700; display: block; }
     function onScanSuccess(decodedText) {
         console.log("Detectado: " + decodedText);
         
+        // --- NUEVA LÓGICA DE LOGROS ---
+        // 1. Obtener lista actual de escaneos
+        let scannedPlaces = JSON.parse(localStorage.getItem('scannedPlaces')) || [];
+        
+        // 2. Si el lugar es nuevo, guardarlo
+        if (!scannedPlaces.includes(decodedText)) {
+            scannedPlaces.push(decodedText);
+            localStorage.setItem('scannedPlaces', JSON.stringify(scannedPlaces));
+            console.log("Nuevo lugar guardado para logros");
+        }
+        // ------------------------------
+
         const sound = document.getElementById('coin-sound');
         if(sound) sound.play();
 
@@ -291,14 +303,16 @@ header h1 b { font-weight: 700; display: block; }
         const viewer = document.getElementById('viewer');
         viewer.src = cleanLink;
 
-        viewer.addEventListener('load', () => { if(loader) loader.style.display = 'none'; });
-
-        viewer.addEventListener('error', () => {
-            if(loader) loader.style.display = 'none';
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.style.display = 'block';
-            errorDiv.innerHTML = "❌ Error: El QR no contiene un modelo 3D válido.";
+        // --- LÓGICA PARA LOGRO DE CÁMARA AR ---
+        // Detecta cuando el usuario entra realmente a la Realidad Aumentada
+        viewer.addEventListener('ar-status', (event) => {
+            if (event.detail.status === 'session-started') {
+                localStorage.setItem('arUsed', 'true');
+                console.log("Logro de cámara AR activado");
+            }
         });
+
+        viewer.addEventListener('load', () => { if(loader) loader.style.display = 'none'; });
     }
 
     html5QrcodeScanner.render(onScanSuccess);
