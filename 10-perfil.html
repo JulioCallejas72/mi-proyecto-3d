@@ -149,24 +149,89 @@
         .setting-text h4 { margin: 0; font-size: 1rem; }
         .setting-text p { margin: 0; font-size: 0.8rem; color: #666; }
 
-        /* --- NAVEGACIÓN (CONSERVADA) --- */
-        nav.bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: var(--nav-bg);
-            height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 60px;
-            z-index: 1000;
-            border-top: 1px solid #eee;
-        }
+        /* --- BARRA DE NAVEGACIÓN --- */
+nav.bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--nav-bg);
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    z-index: 1000;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+}
 
-        .nav-item { font-size: 1.8rem; color: #aaa; cursor: pointer; padding: 12px; transition: 0.3s; }
-        .nav-item.active { color: #333; background: #f0f0f0; border-radius: 50%; border: 1px solid #ddd; }
-        .nav-item:hover { color: var(--primary-teal); }
+.nav-item { 
+    padding: 12px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: var(--transition);
+}
 
+.nav-item.active { background: #f0f0f0; border-radius: 50%; }
+
+.nav-item.special { 
+    border: 2px solid #333; 
+    border-radius: 50%; 
+}
+
+@media (max-width: 600px) {
+    .container { padding: 20px; margin: 15px; }
+    nav.bottom-nav { gap: 30px; }
+}
+
+/* ============================================================
+   APARTADO PARA EMOJIS PNG LOCALES
+   Reemplaza 'nombre_archivo.png' con tus archivos reales.
+   ============================================================ */
+
+.png-emoji {
+    width: 28px;
+    height: 28px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+}
+
+/* Iconos de la Barra de Navegación */
+.nav-icon.png-emoji { width: 32px; height: 32px; }
+.icon-home { background-image: url('emoji_casa.png'); }
+.icon-docs { background-image: url('emoji_documento.png'); }
+.icon-eye { background-image: url('emoji_camara.png'); }
+.icon-search-nav { background-image: url('emoji_Lugares.png'); }
+.icon-profile { background-image: url('emoji_perfil.png'); }
+
+/* ============================================================ */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+header h1 { font-size: 2.8rem; margin: 0; font-weight: 300; }
+header h1 b { font-weight: 700; display: block; }
+
+.header-icons {
+    display: flex;
+    gap: 25px;
+}
+
+/* --- RESPONSIVE --- */
+
+@media (max-width: 768px) {
+    .container { margin: 15px; padding: 20px; }
+    .info-grid { grid-template-columns: 1fr; }
+    nav.bottom-nav { gap: 30px; }
+    .location-control span { font-size: 0.9rem; }
+}
     </style>
 </head>
 <body>
@@ -235,11 +300,21 @@
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="window.location.href='02-dashboard.html'">🏠</div>
-        <div class="nav-item">📄</div>
-        <div class="nav-item" onclick="window.location.href='03-scanner.html'">📷</div>
-        <div class="nav-item" onclick="window.location.href='04-passport.html'">🔍</div>
-        <div class="nav-item active">👤</div>
+        <div class="nav-item active" onclick="window.location.href='02-dashboard.html'">
+            <div class="png-emoji nav-icon icon-home"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='11-MenuContenidoE.html'">
+            <div class="png-emoji nav-icon icon-docs"></div>
+        </div>
+        <div class="nav-item special" onclick="window.location.href='03-scanner.html'">
+            <div class="png-emoji nav-icon icon-eye"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='04-passport.html'">
+            <div class="png-emoji nav-icon icon-search-nav"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='10-perfil.html'">
+            <div class="png-emoji nav-icon icon-profile"></div>
+        </div>
     </nav>
 
     <script>

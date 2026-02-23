@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escanear Modelo 3D - Estilo Dashboard</title>
+    <title>Escanear Modelo 3D - Estilo Unificado</title>
     
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
@@ -11,6 +11,8 @@
 <body>
 
     <div class="container">
+        <button class="back-arrow" onclick="window.location.href='02-dashboard.html'">←</button>
+
         <header>
             <h1>Visor <b>3D AR</b></h1>
         </header>
@@ -44,28 +46,32 @@
     </div>
 
     <nav class="bottom-nav">
-        <a href="02-dashboard.html" class="nav-item">
-            <span>🏠</span><span class="nav-label">Inicio</span>
-        </a>
-        <a href="#" class="nav-item active">
-            <span>📷</span><span class="nav-label">Escanear</span>
-        </a>
-        <a href="04-passport.html" class="nav-item">
-            <span>🗺️</span><span class="nav-label">Pasaporte</span>
-        </a>
-        <a href="10-perfil.html" class="nav-item">
-            <span>👤</span><span class="nav-label">Perfil</span>
-        </a>
+        <div class="nav-item active" onclick="window.location.href='02-dashboard.html'">
+            <div class="png-emoji nav-icon icon-home"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='11-MenuContenidoE.html'">
+            <div class="png-emoji nav-icon icon-docs"></div>
+        </div>
+        <div class="nav-item special" onclick="window.location.href='03-scanner.html'">
+            <div class="png-emoji nav-icon icon-eye"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='04-passport.html'">
+            <div class="png-emoji nav-icon icon-search-nav"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='10-perfil.html'">
+            <div class="png-emoji nav-icon icon-profile"></div>
+        </div>
     </nav>
 
     <audio id="coin-sound" src="https://www.myinstants.com/media/sounds/super-mario-coin.mp3"></audio>
 
     <style>
+    /* --- VARIABLES Y ESTILOS DE CRISTAL --- */
     :root {
         --primary-teal: #4db6ac;
         --nav-bg: #ffffff;
         --text-dark: #333;
-        --glass-bg: rgba(255, 255, 255, 0.70);
+        --glass-bg: rgba(255, 255, 255, 0.75);
     }
 
     body {
@@ -77,8 +83,10 @@
         padding-bottom: 100px;
     }
 
+    /* Contenedor Principal con posición relativa para la flecha */
     .container {
-        width: 90%; max-width: 500px; padding: 40px;
+        position: relative;
+        width: 90%; max-width: 500px; padding: 50px 40px 40px; /* Padding superior extra para la flecha */
         background-color: var(--glass-bg);
         border-radius: 25px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -86,15 +94,157 @@
         text-align: center;
     }
 
+    /* ESTILO DE LA FLECHA DE RETORNO */
+    .back-arrow {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: white;
+        border: 1px solid #ddd;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--text-dark);
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 100;
+    }
+
+    .back-arrow:hover {
+        background-color: #f0f0f0;
+        transform: scale(1.1);
+    }
+
+    header h1 { font-size: 1.8rem; margin-bottom: 25px; font-weight: 300; }
+    header h1 b { font-weight: 700; color: var(--primary-teal); }
+
+    /* ESTILO DE LOS BOTONES DE LA CÁMARA */
     #reader { border-radius: 20px; overflow: hidden; border: none !important; }
 
+    #reader button {
+        background-color: var(--primary-teal) !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px 25px !important;
+        border-radius: 25px !important;
+        cursor: pointer !important;
+        font-weight: bold !important;
+        text-transform: uppercase;
+        font-size: 13px;
+        transition: 0.3s;
+        margin: 10px 5px;
+        box-shadow: 0 4px 10px rgba(77, 182, 172, 0.3);
+    }
+
+    #reader button:hover { opacity: 0.9; transform: scale(1.03); }
+
+    /* ESTILO VISOR 3D */
     model-viewer {
         width: 100%; height: 350px;
         background-color: rgba(255, 255, 255, 0.5);
         border-radius: 20px; margin-bottom: 20px;
     }
 
-    /* Estilos del Spinner de Carga */
+    .ar-button {
+        background-color: var(--primary-teal); color: white; border: none;
+        padding: 14px 24px; border-radius: 25px; font-weight: bold;
+        position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        cursor: pointer; transition: 0.3s;
+    }
+
+    .ar-button:hover { background-color: #3fa196; transform: translateX(-50%) scale(1.05); }
+
+    .action-button { 
+        background: var(--text-dark); color: white; border: none; 
+        padding: 12px 24px; border-radius: 15px; font-weight: 700;
+        cursor: pointer; transition: 0.3s;
+    }
+
+    .instruction-text { margin-top: 20px; font-weight: 600; color: #555; }
+
+    /* --- BARRA DE NAVEGACIÓN --- */
+nav.bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--nav-bg);
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    z-index: 1000;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+}
+
+.nav-item { 
+    padding: 12px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.nav-item.active { background: #f0f0f0; border-radius: 50%; }
+
+.nav-item.special { 
+    border: 2px solid #333; 
+    border-radius: 50%; 
+}
+
+@media (max-width: 600px) {
+    .container { padding: 20px; margin: 15px; }
+    nav.bottom-nav { gap: 30px; }
+}
+
+/* ============================================================
+   APARTADO PARA EMOJIS PNG LOCALES
+   Reemplaza 'nombre_archivo.png' con tus archivos reales.
+   ============================================================ */
+
+.png-emoji {
+    width: 28px;
+    height: 28px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+}
+
+/* Iconos de la Barra de Navegación */
+.nav-icon.png-emoji { width: 32px; height: 32px; }
+.icon-home { background-image: url('emoji_casa.png'); }
+.icon-docs { background-image: url('emoji_documento.png'); }
+.icon-eye { background-image: url('emoji_camara.png'); }
+.icon-search-nav { background-image: url('emoji_Lugares.png'); }
+.icon-profile { background-image: url('emoji_perfil.png'); }
+
+/* ============================================================ */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+header h1 { font-size: 2.8rem; margin: 0; font-weight: 300; }
+header h1 b { font-weight: 700; display: block; }
+
+.header-icons {
+    display: flex;
+    gap: 25px;
+}
+
+    /* Spinner de Carga */
     #loading-screen {
         position: absolute; top: 0; left: 0; width: 100%; height: 350px;
         background: rgba(255, 255, 255, 0.9);
@@ -111,31 +261,8 @@
         animation: spin 1s linear infinite;
         margin-bottom: 10px;
     }
-
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    #error-message { color: #d32f2f; font-weight: bold; margin-bottom: 15px; }
-
-    .ar-button {
-        background-color: var(--primary-teal); color: white; border: none;
-        padding: 12px 20px; border-radius: 25px; font-weight: bold;
-        position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-    }
-
-    .action-button { background: var(--text-dark); color: white; border: none; padding: 10px 20px; border-radius: 10px; }
-
-    /* Estilo de la Navegación */
-    nav.bottom-nav {
-        position: fixed; bottom: 0; left: 0; right: 0;
-        background: var(--nav-bg); height: 80px;
-        display: flex; justify-content: center; align-items: center; gap: 50px;
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 1000;
-    }
-
-    .nav-item { text-decoration: none; color: #aaa; display: flex; flex-direction: column; align-items: center; }
-    .nav-item.active { color: var(--text-dark); background: #f0f0f0; border-radius: 15px; padding: 10px; }
-    .nav-label { font-size: 10px; font-weight: bold; margin-top: 4px; }
-</style>
+    </style>
 
     <script>
     // 1. Inicializar Escáner
@@ -146,50 +273,37 @@
     function onScanSuccess(decodedText) {
         console.log("Detectado: " + decodedText);
         
-        // Reproducir sonido de moneda
         const sound = document.getElementById('coin-sound');
         if(sound) sound.play();
 
-        // Limpiar URL de GitHub
         let cleanLink = decodedText.trim();
         if (cleanLink.includes("github.com") && cleanLink.includes("/blob/")) {
             cleanLink = cleanLink.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
         }
 
-        // Alternar vistas
         html5QrcodeScanner.clear();
         document.getElementById('scanner-view').style.display = 'none';
         document.getElementById('model-view').style.display = 'block';
         
-        // Mostrar carga
         const loader = document.getElementById('loading-screen');
         if(loader) loader.style.display = 'flex';
-        document.getElementById('error-message').style.display = 'none';
 
-        // Cargar Modelo
         const viewer = document.getElementById('viewer');
         viewer.src = cleanLink;
 
-        // Ocultar carga al terminar
-        viewer.addEventListener('load', () => {
-            if(loader) loader.style.display = 'none';
-        });
+        viewer.addEventListener('load', () => { if(loader) loader.style.display = 'none'; });
 
-        // Manejar Errores
         viewer.addEventListener('error', () => {
             if(loader) loader.style.display = 'none';
             const errorDiv = document.getElementById('error-message');
             errorDiv.style.display = 'block';
-            errorDiv.innerHTML = "❌ Error: El enlace del QR no contiene un modelo 3D válido.";
+            errorDiv.innerHTML = "❌ Error: El QR no contiene un modelo 3D válido.";
         });
     }
 
     html5QrcodeScanner.render(onScanSuccess);
 
-    // Botón Reload
-    document.getElementById('btn-reload').addEventListener('click', () => {
-        location.reload();
-    });
+    document.getElementById('btn-reload').addEventListener('click', () => { location.reload(); });
 </script>
 </body>
 </html>

@@ -309,8 +309,7 @@ body {
     cursor: pointer;
 }
 
-/* --- BARRA DE NAVEGACIÓN --- */
-
+ /* --- BARRA DE NAVEGACIÓN --- */
 nav.bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -325,22 +324,65 @@ nav.bottom-nav {
     box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
 }
 
-.nav-item {
-    font-size: 1.8rem;
-    color: #aaa;
-    cursor: pointer;
-    padding: 12px;
+.nav-item { 
+    padding: 12px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
     transition: var(--transition);
 }
 
-.nav-item.active {
-    color: #333;
-    background: #f0f0f0;
-    border-radius: 50%;
-    border: 1px solid #ddd;
+.nav-item.active { background: #f0f0f0; border-radius: 50%; }
+
+.nav-item.special { 
+    border: 2px solid #333; 
+    border-radius: 50%; 
 }
 
-.nav-item:hover { color: var(--primary-teal); }
+@media (max-width: 600px) {
+    .container { padding: 20px; margin: 15px; }
+    nav.bottom-nav { gap: 30px; }
+}
+
+/* ============================================================
+   APARTADO PARA EMOJIS PNG LOCALES
+   Reemplaza 'nombre_archivo.png' con tus archivos reales.
+   ============================================================ */
+
+.png-emoji {
+    width: 28px;
+    height: 28px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+}
+
+/* Iconos de la Barra de Navegación */
+.nav-icon.png-emoji { width: 32px; height: 32px; }
+.icon-home { background-image: url('emoji_casa.png'); }
+.icon-docs { background-image: url('emoji_documento.png'); }
+.icon-eye { background-image: url('emoji_camara.png'); }
+.icon-search-nav { background-image: url('emoji_Lugares.png'); }
+.icon-profile { background-image: url('emoji_perfil.png'); }
+
+/* ============================================================ */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+header h1 { font-size: 2.8rem; margin: 0; font-weight: 300; }
+header h1 b { font-weight: 700; display: block; }
+
+.header-icons {
+    display: flex;
+    gap: 25px;
+}
 
 /* --- RESPONSIVE --- */
 
@@ -431,12 +473,22 @@ nav.bottom-nav {
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-item" onclick="window.location.href='02-dashboard.html'">🏠</div>
-        <div class="nav-item active">📄</div>
-        <div class="nav-item" onclick="window.location.href='03-scanner.html'">📷</div>
-        <div class="nav-item" onclick="window.location.href='04-passport.html'">🔍</div>
-        <div class="nav-item" onclick="window.location.href='10-perfil.html'">👤</div>
+   <nav class="bottom-nav">
+        <div class="nav-item active" onclick="window.location.href='02-dashboard.html'">
+            <div class="png-emoji nav-icon icon-home"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='11-MenuContenidoE.html'">
+            <div class="png-emoji nav-icon icon-docs"></div>
+        </div>
+        <div class="nav-item special" onclick="window.location.href='03-scanner.html'">
+            <div class="png-emoji nav-icon icon-eye"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='04-passport.html'">
+            <div class="png-emoji nav-icon icon-search-nav"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='10-perfil.html'">
+            <div class="png-emoji nav-icon icon-profile"></div>
+        </div>
     </nav>
 
     <script>
@@ -452,7 +504,7 @@ const placesData = [
         description: 'Conocida como la Ciudad de los Dioses, fue uno de los centros urbanos más grandes del mundo antiguo.',
         history: 'Construida entre el 100 a.C. y el 650 d.C., albergó a más de 125,000 habitantes en su apogeo.',
         facts: 'La Pirámide del Sol es la tercera más grande del mundo y atrae a miles cada equinoccio.',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoUrl: 'https://www.youtube.com/embed/LNZSFobKdvQ',
         heroImg: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=800',
         gallery: ['https://images.unsplash.com/photo-1512813498716-1e00f14d46b0?w=300', 'https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?w=300', 'https://images.unsplash.com/photo-1509204043128-4033327f31be?w=300']
     },
@@ -463,23 +515,23 @@ const placesData = [
         description: 'La ciudad maya más famosa del mundo y una de las 7 maravillas del mundo moderno.',
         history: 'Fue el centro político y económico de la civilización maya entre los años 750 y 1200 d.C.',
         facts: 'El Templo de Kukulkán tiene 365 escalones, representando los días del año solar.',
-        videoUrl: 'https://www.youtube.com/embed/z5m_j621p88',
+        videoUrl: 'https://www.youtube.com/embed/MDxtCcjwSh0',
         heroImg: 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=800',
         gallery: ['https://images.unsplash.com/photo-1568402102990-bc541580b59f?w=300', 'https://images.unsplash.com/photo-1552623673-7050bb4004a1?w=300', 'https://images.unsplash.com/photo-1542311400-3498522e8f1f?w=300']
     },
-    { id: 'palenque', name: 'Palenque', state: 'Chiapas', description: 'Impresionante zona arqueológica en la selva.', history: 'Famosa por la tumba del Rey Pakal.', facts: 'Es una de las ciudades mayas mejor conservadas.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1516147413645-98521d8b2d1f?w=800', gallery: [] },
+    { id: 'palenque', name: 'Palenque', state: 'Chiapas', description: 'Impresionante zona arqueológica en la selva.', history: 'Famosa por la tumba del Rey Pakal.', facts: 'Es una de las ciudades mayas mejor conservadas.', videoUrl: '', heroImg: 'https://www.worldhistory.org/img/r/p/1000x1200/3097.jpg.webp?v=1741727705', gallery: [] },
     { id: 'tulum', name: 'Tulum', state: 'Quintana Roo', description: 'Antigua ciudad amurallada frente al Mar Caribe.', history: 'Fue un puerto comercial clave para los mayas.', facts: 'Es el único sitio arqueológico frente al mar.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1504730655501-24c39ac53f0e?w=800', gallery: [] },
     { id: 'oaxaca', name: 'Monte Albán', state: 'Oaxaca', description: 'Capital espiritual de los zapotecos.', history: 'Fundada en una colina aplanada artificialmente.', facts: 'Cuenta con un observatorio astronómico único.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=800', gallery: [] },
-    { id: 'guadalajara', name: 'Hospicio Cabañas', state: 'Jalisco', description: 'Patrimonio de la Humanidad con murales de Orozco.', history: 'Antiguo orfanato y hospital del siglo XIX.', facts: 'Alberga "El Hombre en Llamas", obra maestra mural.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1564221211048-5f187f2495b9?w=800', gallery: [] },
-    { id: 'guanajuato', name: 'Teatro Juárez', state: 'Guanajuato', description: 'Uno de los teatros más bellos de México.', history: 'Inaugurado en 1903 por Porfirio Díaz.', facts: 'Su estilo es neoclásico con columnas dóricas.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1599814522851-933e4b3e8954?w=800', gallery: [] },
-    { id: 'puebla', name: 'Catedral de Puebla', state: 'Puebla', description: 'Joyas de la arquitectura novohispana.', history: 'Sus torres son de las más altas de México.', facts: 'Cuenta con 14 campanas de gran tamaño.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1512813498716-1e00f14d46b0?w=800', gallery: [] },
-    { id: 'taxco', name: 'Santa Prisca', state: 'Guerrero', description: 'Iglesia barroca en el corazón de la plata.', history: 'Financiada por el minero José de la Borda.', facts: 'Se construyó en solo 7 años.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1569424756314-8848203f7f85?w=800', gallery: [] },
+    { id: 'guadalajara', name: 'Hospicio Cabañas', state: 'Jalisco', description: 'Patrimonio de la Humanidad con murales de Orozco.', history: 'Antiguo orfanato y hospital del siglo XIX.', facts: 'Alberga "El Hombre en Llamas", obra maestra mural.', videoUrl: '', heroImg: 'https://i0.wp.com/foodandpleasure.com/wp-content/uploads/2024/03/museo-cabanas-en-guadalajara2.jpg?fit=1500%2C915&ssl=1', gallery: [] },
+    { id: 'guanajuato', name: 'Teatro Juárez', state: 'Guanajuato', description: 'Uno de los teatros más bellos de México.', history: 'Inaugurado en 1903 por Porfirio Díaz.', facts: 'Su estilo es neoclásico con columnas dóricas.', videoUrl: '', heroImg: 'https://laverdad.com.mx/wp-content/uploads/2020/03/Dw9fwK3VAAAwSx--1024x659.jpg', gallery: [] },
+    { id: 'puebla', name: 'Catedral de Puebla', state: 'Puebla', description: 'Joyas de la arquitectura novohispana.', history: 'Sus torres son de las más altas de México.', facts: 'Cuenta con 14 campanas de gran tamaño.', videoUrl: '', heroImg: 'https://images.trvl-media.com/place/6113676/c5c18e97-bf52-488e-82ce-67db6e1de41f.jpg', gallery: [] },
+    { id: 'taxco', name: 'Santa Prisca', state: 'Guerrero', description: 'Iglesia barroca en el corazón de la plata.', history: 'Financiada por el minero José de la Borda.', facts: 'Se construyó en solo 7 años.', videoUrl: '', heroImg: 'https://www.mexicodesconocido.com.mx/wp-content/uploads/2018/06/zamora-1024x640.jpg', gallery: [] },
     { id: 'cancun', name: 'El Rey', state: 'Quintana Roo', description: 'Ruinas mayas en plena zona hotelera.', history: 'Nombrada así por un esqueleto hallado.', facts: 'Hoy es hogar de cientos de iguanas.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1602088113235-229c19758e9f?w=800', gallery: [] },
     { id: 'mexico-city', name: 'Templo Mayor', state: 'CDMX', description: 'El centro sagrado de los aztecas.', history: 'Descubierto accidentalmente en los años 70.', facts: 'Dedicado a Huitzilopochtli y Tlaloc.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=800', gallery: [] },
     { id: 'uxmal', name: 'Uxmal', state: 'Yucatán', description: 'Representación máxima del estilo Puuc.', history: 'Su pirámide tiene bordes redondeados.', facts: 'La Pirámide del Adivino se construyó en una noche (leyenda).', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1568402102990-bc541580b59f?w=800', gallery: [] },
-    { id: 'monterrey', name: 'Macroplaza', state: 'Nuevo León', description: 'Una de las plazas más grandes del mundo.', history: 'Construida en los años 80 para modernizar el centro.', facts: 'Alberga el Faro del Comercio.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1517452656321-4d100780287f?w=800', gallery: [] },
-    { id: 'morelia', name: 'Acueducto', state: 'Michoacán', description: 'Estructura colonial con 253 arcos.', history: 'Ayudó a traer agua a la ciudad en 1785.', facts: 'Es uno de los símbolos de Morelia.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1512813498716-1e00f14d46b0?w=800', gallery: [] },
-    { id: 'veracruz', name: 'San Juan de Ulúa', state: 'Veracruz', description: 'Antigua fortaleza y prisión.', history: 'Sirvió como última defensa de España.', facts: 'Tiene muros hechos de coral.', videoUrl: '', heroImg: 'https://images.unsplash.com/photo-1569424756314-8848203f7f85?w=800', gallery: [] }
+    { id: 'monterrey', name: 'Macroplaza', state: 'Nuevo León', description: 'Una de las plazas más grandes del mundo.', history: 'Construida en los años 80 para modernizar el centro.', facts: 'Alberga el Faro del Comercio.', videoUrl: '', heroImg: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/4b/ec/c2/img-20190129-100003-largejpg.jpg?w=900&h=500&s=1', gallery: [] },
+    { id: 'morelia', name: 'Acueducto', state: 'Michoacán', description: 'Estructura colonial con 253 arcos.', history: 'Ayudó a traer agua a la ciudad en 1785.', facts: 'Es uno de los símbolos de Morelia.', videoUrl: '', heroImg: 'https://inah.gob.mx/images/fotodeldia/20231229_fotodia_AcueductoQueretaro.jpg', gallery: [] },
+    { id: 'veracruz', name: 'San Juan de Ulúa', state: 'Veracruz', description: 'Antigua fortaleza y prisión.', history: 'Sirvió como última defensa de España.', facts: 'Tiene muros hechos de coral.', videoUrl: '', heroImg: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/39/5d/b5/20191205-131539-largejpg.jpg?w=1200&h=1200&s=1', gallery: [] }
 ];
 
 let currentIndex = 0;

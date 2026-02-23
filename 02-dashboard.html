@@ -3,174 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explorando Barcelona - Dashboard Escalable</title>
+    <title>AR México - Dashboard Interactivo</title>
+    
     <style>
-        /* --- CSS: Estilos Base --- */
-        :root {
-            --primary-teal: #4db6ac;
-            --nav-bg: #ffffff;
-            --text-dark: #333;
-            --card-shadow: 0 4px 15px rgba(0,0,0,0.06);
-        }
+        /* Aquí se insertará el CSS completo en el siguiente paso */
+        
+/* --- CSS: DASHBOARD INTERACTIVO (ESTILO CRISTAL UNIFICADO) --- */
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: var(--text-dark);
-            padding-bottom: 100px;
-            min-height: 100vh;
-            /* Imagen de fondo basada en tu configuración previa */
-            background-image: url('Fondo_Blanco_AzulMaya.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
+:root {
+    --primary-teal: #4db6ac;
+    --nav-bg: #ffffff;
+    --text-dark: #333;
+    --glass-bg: rgba(255, 255, 255, 0.75); /* Transparencia al 0.75 según solicitado */
+    --card-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    --transition: 0.3s ease;
+}
 
-        /* Contenedor principal con transparencia al 0.75 */
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 40px;
-            background-color: rgba(255, 255, 255, 0.75); 
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            backdrop-filter: blur(8px);
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--text-dark);
+    padding-bottom: 100px;
+    min-height: 100vh;
+    /* Imagen de fondo unificada */
+    background-image: url('Fondo_Blanco_AzulMaya.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
 
-        header h1 { font-size: 2.8rem; margin: 0; font-weight: 300; }
-        header h1 b { font-weight: 700; display: block; }
+/* --- CONTENEDOR PRINCIPAL EFECTO CRISTAL --- */
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 40px;
+    background-color: var(--glass-bg); 
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+}
 
-        .header-icons {
-            display: flex;
-            gap: 25px;
-            font-size: 1.8rem;
-            color: var(--primary-teal);
-        }
+/* ============================================================
+   APARTADO PARA EMOJIS PNG LOCALES
+   Reemplaza 'nombre_archivo.png' con tus archivos reales.
+   ============================================================ */
 
-        /* Filtros */
-        .filters { display: flex; gap: 15px; margin-bottom: 40px; }
-        .chip {
-            padding: 10px 25px;
-            border-radius: 25px;
-            background: #fff;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .chip.active { background-color: var(--primary-teal); color: white; }
+.png-emoji {
+    width: 28px;
+    height: 28px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+}
 
-        /* --- MODIFICACIÓN: HILERA ESCALABLE --- */
-        .featured-row {
-            display: flex;            /* Alinea los elementos en una fila */
-            overflow-x: auto;         /* Permite scroll horizontal si hay muchas imágenes */
-            gap: 25px;                /* Espacio constante entre tarjetas */
-            padding: 10px 5px 20px 5px; 
-            margin-bottom: 40px;
-            scrollbar-width: thin;    /* Estilo de scroll para Firefox */
-        }
+/* Iconos del Header */
+.icon-search { background-image: url('tu_lupa_local.png'); }
+.icon-map-header { background-image: url('tu_mapa_local.png'); }
 
-        /* Estilo de la barra de scroll para Chrome/Safari */
-        .featured-row::-webkit-scrollbar { height: 6px; }
-        .featured-row::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+/* Iconos de Categorías (Ajustados para el cuadro) */
+.cat-icon.png-emoji { width: 40px; height: 40px; }
+.icon-lugares { background-image: url('emoji_lugares.png'); }
+.icon-educativo { background-image: url('emoji_documento.png'); }
+.icon-logros { background-image: url('emoji_copa.png'); }
+.icon-tienda { background-image: url('emoji_Tienda.png'); }
 
-        .card {
-            flex: 0 0 220px;          /* No permite que la tarjeta se encoja, mantiene 220px de ancho */
-            background: #fff;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            aspect-ratio: 4/5;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
+/* Iconos de la Barra de Navegación */
+.nav-icon.png-emoji { width: 32px; height: 32px; }
+.icon-home { background-image: url('emoji_casa.png'); }
+.icon-docs { background-image: url('emoji_documento.png'); }
+.icon-eye { background-image: url('emoji_camara.png'); }
+.icon-search-nav { background-image: url('emoji_Lugares.png'); }
+.icon-profile { background-image: url('emoji_perfil.png'); }
 
-        .card:hover { transform: translateY(-5px); }
+/* ============================================================ */
 
-        .card img { width: 100%; height: 100%; object-fit: cover; }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
 
-        .card-title {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 15px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            color: white;
-            font-weight: 600;
-        }
+header h1 { font-size: 2.8rem; margin: 0; font-weight: 300; }
+header h1 b { font-weight: 700; display: block; }
 
-        /* Categorías */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
+.header-icons {
+    display: flex;
+    gap: 25px;
+}
 
-        .category-item {
-            display: flex;
-            align-items: center;
-            background: rgba(244, 244, 244, 0.8);
-            padding: 20px;
-            border-radius: 15px;
-            gap: 15px;
-            cursor: pointer; /* Añadido para indicar que es clickeable */
-            transition: background 0.3s ease;
-        }
+/* --- FILTROS (CHIPS) --- */
+.filters { display: flex; gap: 15px; margin-bottom: 40px; }
 
-        .category-item:hover {
-            background: rgba(255, 255, 255, 0.9); /* Efecto visual al pasar el mouse */
-        }
+.chip {
+    padding: 10px 25px;
+    border-radius: 25px;
+    background: #fff;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    font-size: 14px;
+    transition: var(--transition);
+}
 
-        .cat-icon {
-            font-size: 1.8rem;
-            background: white;
-            padding: 10px;
-            border-radius: 12px;
-        }
+.chip.active { 
+    background-color: var(--primary-teal); 
+    color: white; 
+    border-color: var(--primary-teal);
+}
 
-        /* Barra de navegación */
-        nav.bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: var(--nav-bg);
-            height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 60px;
-            z-index: 1000;
-            border-top: 1px solid #eee;
-        }
+/* --- HILERA ESCALABLE DE DESTACADOS --- */
+.featured-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 25px;
+    padding: 10px 5px 20px 5px; 
+    margin-bottom: 40px;
+    scrollbar-width: thin;
+}
 
-        .nav-item { font-size: 1.8rem; color: #aaa; cursor: pointer; padding: 12px; }
-        .nav-item.active { color: #333; background: #f0f0f0; border-radius: 50%; }
-        .nav-item.special { color: #222; border: 2px solid #333; border-radius: 50%; }
-    </style>
+.featured-row::-webkit-scrollbar { height: 6px; }
+.featured-row::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+
+.card {
+    flex: 0 0 220px;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    aspect-ratio: 4/5;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.card:hover { transform: translateY(-5px); }
+
+.card img { width: 100%; height: 100%; object-fit: cover; }
+
+.card-title {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 15px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: white;
+    font-weight: 600;
+}
+
+/* --- GRID DE CATEGORÍAS --- */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    background: rgba(244, 244, 244, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    gap: 15px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.category-item:hover { background: rgba(255, 255, 255, 0.9); }
+
+.cat-icon-bg {
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- BARRA DE NAVEGACIÓN --- */
+nav.bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--nav-bg);
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    z-index: 1000;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+}
+
+.nav-item { 
+    padding: 12px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.nav-item.active { background: #f0f0f0; border-radius: 50%; }
+
+.nav-item.special { 
+    border: 2px solid #333; 
+    border-radius: 50%; 
+}
+
+@media (max-width: 600px) {
+    .container { padding: 20px; margin: 15px; }
+    nav.bottom-nav { gap: 30px; }
+}
+</style>
+    
 </head>
 <body>
 
     <div class="container">
         <header>
             <div class="header-title">
-                <h1>Lugares <b>A Descubrir</b></h1>
+                <h1>Explorando <b>México</b></h1>
             </div>
             <div class="header-icons">
-                <span>🔍</span> <span>🗺️</span>
+                <div class="png-emoji icon-search" title="Buscar"></div> 
+                <div class="png-emoji icon-map-header" title="Mapa"></div>
             </div>
         </header>
 
         <section class="filters">
-            <div class="chip active">Cerca de mí</div>
-            <div class="chip">Museos</div>
-            <div class="chip">Parques</div>
+            <div class="chip active" data-filter="all">Cerca de mí</div>
+            <div class="chip" data-filter="museo">Museos</div>
+            <div class="chip" data-filter="parque">Parques</div>
         </section>
 
         <section>
@@ -181,112 +252,120 @@
 
         <section>
             <h2>Lista de Categorías</h2>
-            <div class="categories-grid">
-                <div class="category-item"> <span class="cat-icon">🗺️</span> <span>Lugares</span> </div>
-                <div class="category-item"> <span class="cat-icon">👑</span> <span>Contenido educativo</span> </div>
-                <div class="category-item"> <span class="cat-icon">🏆</span> <span>Logros</span> </div>
-                <div class="category-item"> <span class="cat-icon">🏪</span> <span>Tienda</span> </div>
+            <div class="categories-grid" id="categoriesContainer">
+                <div class="category-item" onclick="window.location.href='06-lugares-desbloqueados.html'">
+                    <div class="png-emoji cat-icon icon-lugares"></div>
+                    <span>Lugares</span>
+                </div>
+                <div class="category-item" onclick="window.location.href='11-MenuContenidoE.html'">
+                    <div class="png-emoji cat-icon icon-educativo"></div>
+                    <span>Contenido educativo</span>
+                </div>
+                <div class="category-item" onclick="window.location.href='07-logros.html'">
+                    <div class="png-emoji cat-icon icon-logros"></div>
+                    <span>Logros</span>
+                </div>
+                <div class="category-item" onclick="window.location.href='09-tienda.html'">
+                    <div class="png-emoji cat-icon icon-tienda"></div>
+                    <span>Tienda</span>
+                </div>
             </div>
         </section>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active">🏠</div>
-        <div class="nav-item">📄</div>
-        <div class="nav-item special">📷</div>
-        <div class="nav-item">🔍</div>
-        <div class="nav-item">👤</div>
+        <div class="nav-item active" onclick="window.location.href='02-dashboard.html'">
+            <div class="png-emoji nav-icon icon-home"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='11-MenuContenidoE.html'">
+            <div class="png-emoji nav-icon icon-docs"></div>
+        </div>
+        <div class="nav-item special" onclick="window.location.href='03-scanner.html'">
+            <div class="png-emoji nav-icon icon-eye"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='04-passport.html'">
+            <div class="png-emoji nav-icon icon-search-nav"></div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='10-perfil.html'">
+            <div class="png-emoji nav-icon icon-profile"></div>
+        </div>
     </nav>
 
     <script>
-        /* --- JAVASCRIPT: Gestión Dinámica de Imágenes --- */
-        
-        const destacados = [
-            { titulo: 'Sagrada Familia', imagen: 'https://images.unsplash.com/photo-1583778175739-99419161276a?w=400' },
-            { titulo: 'Museo Parqüell', imagen: 'https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?w=400' },
-            { titulo: 'Casa Batlló', imagen: 'https://images.unsplash.com/photo-1543731068-7e0f5beff43a?w=400' },
-            { titulo: 'La Pedrera', imagen: 'https://images.unsplash.com/photo-1511527661048-7fe73d85e9a4?w=400' }
-        ];
+/* --- JAVASCRIPT: LÓGICA DEL DASHBOARD INTERACTIVO --- */
 
-        function cargarDestacados() {
-            const contenedor = document.getElementById('featuredContainer');
-            contenedor.innerHTML = destacados.map(item => `
-                <div class="card">
-                    <img src="${item.imagen}" alt="${item.titulo}">
-                    <div class="card-title">${item.titulo}</div>
-                </div>
-            `).join('');
-        }
+// 1. BASE DE DATOS: Lista de lugares con categorías para los filtros
+const destacados = [
+    { id: 'teotihuacan', titulo: 'Teotihuacán', imagen: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=400', tipo: 'museo' },
+    { id: 'chichen-itza', titulo: 'Chichén Itzá', imagen: 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=400', tipo: 'museo' },
+    { id: 'tulum', titulo: 'Tulum', imagen: 'https://images.unsplash.com/photo-1504730655501-24c39ac53f0e?w=400', tipo: 'parque' },
+    { id: 'palenque', titulo: 'Palenque', imagen: 'https://www.worldhistory.org/img/r/p/1000x1200/3097.jpg.webp?v=1741727705', tipo: 'museo' },
+    { id: 'el-rey', titulo: 'Ruinas El Rey', imagen: 'https://images.unsplash.com/photo-1602088113235-229c19758e9f?w=400', tipo: 'parque' },
+    { id: 'chapultepec', titulo: 'Chapultepec', imagen: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=400', tipo: 'parque' }
+];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarDestacados();
+// 2. FUNCIÓN PARA RENDERIZAR LAS TARJETAS
+function cargarDestacados(filtro = 'all') {
+    const contenedor = document.getElementById('featuredContainer');
+    
+    // Filtrar la lista según la categoría seleccionada
+    const listaFiltrada = filtro === 'all' 
+        ? destacados 
+        : destacados.filter(item => item.tipo === filtro);
 
-            const chips = document.querySelectorAll('.chip');
-            chips.forEach(chip => {
-                chip.addEventListener('click', () => {
-                    chips.forEach(c => c.classList.remove('active'));
-                    chip.classList.add('active');
-                });
-            });
+    contenedor.innerHTML = listaFiltrada.map(item => `
+        <div class="card" onclick="irAContenido('${item.id}')">
+            <img src="${item.imagen}" alt="${item.titulo}">
+            <div class="card-title">${item.titulo}</div>
+        </div>
+    `).join('');
+}
 
-            // --- LÓGICA DE NAVEGACIÓN DE LA BARRA INFERIOR ---
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach((item, index) => {
-                item.addEventListener('click', () => {
-                    navItems.forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
+// 3. REDIRECCIÓN AL CONTENIDO EDUCATIVO
+// Redirige al apartado con el mismo nombre en el archivo 11
+function irAContenido(idLugar) {
+    console.log("Navegando a la lección: " + idLugar);
+    window.location.href = `11-MenuContenidoE.html?place=${idLugar}`;
+}
 
-                    switch(index) {
-                        case 0:
-                            window.location.href = '02-dashboard.html';
-                            break;
-                        case 1:
-                            window.location.href = '11-MenuContenidoE.html';
-                            break;
-                        case 2:
-                            window.location.href = '03-scanner.html';
-                            break;
-                        case 3:
-                            window.location.href = '04-passport.html';
-                            break;
-                        case 4:
-                            window.location.href = '10-perfil.html';
-                            break;
-                    }
-                });
-            });
+// 4. LÓGICA DE FILTROS (CHIPS)
+function configurarFiltros() {
+    const chips = document.querySelectorAll('.chip');
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            // Actualización visual
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
 
-            // --- NUEVO: LÓGICA DE NAVEGACIÓN PARA LA LISTA DE CATEGORÍAS ---
-            // Seleccionamos todos los elementos con la clase 'category-item'
-            const categoryItems = document.querySelectorAll('.category-item');
-            
-            categoryItems.forEach((item) => {
-                item.addEventListener('click', () => {
-                    // Obtenemos el texto dentro del span para saber qué categoría se presionó
-                    const categoria = item.querySelector('span:last-child').textContent.trim();
-                    
-                    // Switch para manejar los redireccionamientos según el nombre de la categoría
-                    switch(categoria) {
-                        case 'Logros':
-                            // Redirige a la página de logros como solicitaste
-                            window.location.href = '07-logros.html';
-                            break;
-                        case 'Lugares':
-                            // Redirige a la sección de lugares/mapa
-                            window.location.href = '06-lugares-desbloqueados.html';
-                            break;
-                        case 'Tienda':
-                            // Placeholder para la tienda
-                            window.location.href ='09-tienda.html';
-                            break;
-                        case 'Contenido educativo':
-                            // Placeholder para contenido educativo
-                            window.location.href ='05-educational-content.html';
-                            break;
-                    }
-                });
-            });
+            // Filtrado funcional
+            const categoria = chip.getAttribute('data-filter');
+            cargarDestacados(categoria);
         });
-    </script>
+    });
+}
+
+// 5. INICIALIZACIÓN AL CARGAR EL DOM
+document.addEventListener('DOMContentLoaded', () => {
+    cargarDestacados(); 
+    configurarFiltros();
+    aplicarIconosLocales();
+});
+
+/* ============================================================
+   APARTADO PARA GESTIONAR TUS EMOJIS PNG LOCALES
+   Si prefieres asignar las rutas de los PNGs vía JavaScript, 
+   puedes hacerlo aquí seleccionando las clases correspondientes.
+   ============================================================ */
+function aplicarIconosLocales() {
+    // Ejemplo de uso para asignar una imagen local a un icono:
+    // const searchIcon = document.querySelector('.icon-search');
+    // if(searchIcon) searchIcon.style.backgroundImage = "url('mi_lupa.png')";
+    
+    console.log("Sistema de emojis PNG locales listo para configuración.");
+}
+/* ============================================================ */
+
+</script>
+
 </body>
 </html>
