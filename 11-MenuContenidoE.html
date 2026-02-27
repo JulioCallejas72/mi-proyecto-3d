@@ -60,9 +60,26 @@ body {
 /* --- ESTILOS DEL MENÚ (15+ Apartados) --- */
 
 .view-header {
+    display: flex;
+    flex-direction: column; /* Pone el texto uno abajo del otro */
+    align-items: center;    /* Centra horizontalmente */
+    justify-content: center;
     text-align: center;
     margin-bottom: 40px;
+    width: 100%;           /* Asegura que ocupe todo el ancho para centrar */
 }
+
+/* Estilo para el nuevo botón de volver */
+.back-btn-dashboard {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px; /* Espacio antes del título */
+    transition: 0.3s;
+}   
 
 .view-header h1 { font-size: 2.5rem; font-weight: 300; }
 .view-header b { font-weight: 700; color: var(--primary-teal); }
@@ -175,12 +192,14 @@ body {
 
 /* Tarjetas y Grid de Información */
 
+/* Para que los contenedores resalten sobre el fondo */
 .card {
-    background: white;
+    background: rgba(255, 255, 255, 0.95) !important; /* Más sólido para que se vea claro */
     border-radius: 20px;
     padding: 25px;
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     margin-bottom: 25px;
+    display: block !important; /* Asegura que no se oculte */
 }
 
 .description-card {
@@ -190,19 +209,19 @@ body {
     gap: 20px;
 }
 
+/* Para que el botón de video sea grande y fácil de presionar */
 .play-video-btn {
     background: var(--primary-teal);
     color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 30px;
-    font-weight: 700;
-    cursor: pointer;
-    align-self: flex-start;
+    width: 100%;          /* Ahora ocupa todo el ancho del contenedor */
+    padding: 20px;
+    border-radius: 15px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-top: 15px;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 10px;
-    transition: var(--transition);
 }
 
 .play-video-btn:hover { transform: scale(1.05); background: #3fa196; }
@@ -401,9 +420,11 @@ header h1 b { font-weight: 700; display: block; }
     <div class="container">
         
         <section id="menuView">
-            <header class="view-header">
+            <button class="back-btn-dashboard" onclick="window.location.href='02-dashboard.html'">Volver</button>
+    
+           <header class="view-header">
                 <h1>Contenido <b>Educativo</b></h1>
-                <p>Selecciona una lección para comenzar</p>
+                <p>Selecciona un lugar</p>
             </header>
             
             <div class="edu-grid" id="mainMenuGrid">
@@ -412,7 +433,7 @@ header h1 b { font-weight: 700; display: block; }
 
         <section id="detailView" style="display: none;">
             <header class="detail-header">
-                <button class="back-to-menu" id="btnBackMenu">← Volver al Menú</button>
+                <button class="back-to-menu" id="btnBackMenu">Volver al Menú</button>
                 <div class="location-control">
                     <button class="nav-arrow" id="prevPlace">◀</button>
                     <span id="currentPlaceName">Nombre del Lugar</span>
@@ -474,10 +495,10 @@ header h1 b { font-weight: 700; display: block; }
     </div>
 
    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="window.location.href='02-dashboard.html'">
+        <div class="nav-item" onclick="window.location.href='02-dashboard.html'">
             <div class="png-emoji nav-icon icon-home"></div>
         </div>
-        <div class="nav-item" onclick="window.location.href='11-MenuContenidoE.html'">
+        <div class="nav-item active" onclick="window.location.href='11-MenuContenidoE.html'">
             <div class="png-emoji nav-icon icon-docs"></div>
         </div>
         <div class="nav-item special" onclick="window.location.href='03-scanner.html'">
