@@ -67,20 +67,42 @@
     .setting-text p { margin: 0; font-size: 0.8rem; color: #666; }
 
     nav.bottom-nav {
-        position: fixed; bottom: 0; left: 0; right: 0; background: var(--nav-bg);
-        height: 80px; display: flex; justify-content: center; align-items: center; gap: 60px;
-        z-index: 1000; border-top: 1px solid #eee;
-    }
-    .nav-item { padding: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .nav-item.active { background: #f0f0f0; border-radius: 50%; }
-    .nav-item.special { border: 2px solid #333; border-radius: 50%; }
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--nav-bg);
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    z-index: 1000;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+}
 
-    .png-emoji { width: 28px; height: 28px; background-size: contain; background-repeat: no-repeat; background-position: center; display: inline-block; }
-    .icon-home { background-image: url('Emoji_Casa.png'); }
-    .icon-docs { background-image: url('Emoji_Documento.png'); }
-    .icon-eye { background-image: url('Emoji_Camara.png'); }
-    .icon-search-nav { background-image: url('Emoji_Lugares.png'); }
-    .icon-profile { background-image: url('Emoji_Perfil.png'); }
+.nav-item { 
+    padding: 12px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.nav-item.active { background: #f0f0f0; border-radius: 50%; }
+
+.nav-item.special { 
+    border: 2px solid #333; 
+    border-radius: 50%; 
+}
+
+    /* Iconos de la Barra de Navegación */
+.nav-icon.png-emoji { width: 32px; height: 32px; }
+.icon-home { background-image: url('Emoji_Casa.png'); }
+.icon-docs { background-image: url('Emoji_Documento.png'); }
+.icon-eye { background-image: url('Emoji_Camara.png'); }
+.icon-search-nav { background-image: url('Emoji_Lugares.png'); }
+.icon-profile { background-image: url('Emoji_Perfil.png'); }
 </style>
 </head>
 <body>

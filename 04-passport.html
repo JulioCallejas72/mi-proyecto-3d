@@ -58,18 +58,38 @@ body {
 .close-x-pill { position: absolute; top: 20px; right: 25px; background: white; border: 1px solid #ddd; width: 45px; height: 45px; border-radius: 50%; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: var(--transition); }
 .back-btn-pill { position: absolute; top: 20px; left: 20px; background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; z-index: 100; }
 
-/* --- BARRA DE NAVEGACIÓN (ESTILO DASHBOARD 02) --- */
 nav.bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--nav-bg); height: 80px;
-    display: flex; justify-content: center; align-items: center; gap: 60px;
-    z-index: 2000; border-top: 1px solid #eee;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--nav-bg);
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    z-index: 1000;
+    border-top: 1px solid #eee;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
 }
-.nav-item { padding: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
-.nav-item.active { background: #f0f0f0; border-radius: 50%; }
-.nav-item.special { border: 2px solid #333; border-radius: 50%; }
 
-.png-emoji { width: 28px; height: 28px; background-size: contain; background-repeat: no-repeat; display: inline-block; }
+.nav-item { 
+    padding: 12px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.nav-item.active { background: #f0f0f0; border-radius: 50%; }
+
+.nav-item.special { 
+    border: 2px solid #333; 
+    border-radius: 50%; 
+}
+
+    /* Iconos de la Barra de Navegación */
+.nav-icon.png-emoji { width: 32px; height: 32px; }
 .icon-home { background-image: url('Emoji_Casa.png'); }
 .icon-docs { background-image: url('Emoji_Documento.png'); }
 .icon-eye { background-image: url('Emoji_Camara.png'); }
