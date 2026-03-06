@@ -11,7 +11,8 @@
 :root {
     --primary-teal: #4db6ac;
     --nav-bg: #ffffff;
-    --glass-heavy: rgba(255, 255, 255, 0.75); /* Mismo que 11-MenuContenidoE */
+    --text-dark: #333;
+    --glass-heavy: rgba(255, 255, 255, 0.75);
     --transition: 0.3s ease;
 }
 
@@ -19,36 +20,51 @@ body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0; padding-bottom: 100px;
     background: url('Fondo_Blanco_AzulMaya.png') center/cover no-repeat fixed;
-    touch-action: none; /* COMENTARIO: Permite que el JS controle los gestos del mapa */
+    overflow: hidden;
 }
 
-/* --- ESTILO CONTENEDOR (Igual a 11-MenuContenidoE) --- */
+/* --- CONTENEDOR Y TÍTULO --- */
 .container.glass-effect {
-    max-width: 1000px; margin: 20px auto; padding: 30px;
+    max-width: 800px; margin: 30px auto; padding: 40px;
     background-color: var(--glass-heavy); border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     backdrop-filter: blur(8px); position: relative;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
 }
 
-/* --- MAPA Y HOVER --- */
+.centered-header {
+    display: flex; justify-content: center; align-items: center;
+    width: 100%; margin-bottom: 25px;
+}
+.centered-header h1 { font-size: 2.8rem; font-weight: 300; margin: 0; }
+.centered-header b { font-weight: 700; color: var(--primary-teal); margin-left: 10px; }
+
+/* --- MAPA Y MOVIMIENTO --- */
 .map-viewport {
-    width: 100%; height: 450px; background: rgba(255,255,255,0.3);
+    width: 100%; height: 450px; background: rgba(255,255,255,0.4);
     border-radius: 20px; overflow: hidden; position: relative;
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: grab; touch-action: none;
 }
+.map-viewport:active { cursor: grabbing; }
+.map-interact-area { width: 100%; height: 100%; transform-origin: center; transition: transform 0.1s ease-out; }
 
-.map-interact-area { width: 100%; height: 100%; transform-origin: center; transition: transform 0.05s ease-out; }
+/* --- VENTANA EMERGENTE Y BOTONES --- */
+.overlay-container { position: fixed; top: -100%; left: 0; width: 100%; height: 100%; z-index: 3000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1); display: flex; justify-content: center; align-items: flex-start; }
+.overlay-container.active { top: 0; }
+.overlay-glass-card { width: 100%; max-width: 600px; padding: 60px 40px; background: url('Fondo_Transparente_AzulClaro.png') center/cover; border-radius: 0 0 45px 45px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.overlay-glass-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); z-index: -1; }
 
-path:hover, circle:hover { fill: var(--primary-teal) !important; cursor: pointer; }
+.close-x-pill { position: absolute; top: 20px; right: 25px; background: white; border: 1px solid #ddd; width: 45px; height: 45px; border-radius: 50%; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: var(--transition); }
+.back-btn-pill { position: absolute; top: 20px; left: 20px; background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; z-index: 100; }
 
-/* --- BARRA DE NAVEGACIÓN (Copiada de 11-MenuContenidoE) --- */
+/* --- BARRA DE NAVEGACIÓN (ESTILO DASHBOARD 02) --- */
 nav.bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0;
     background: var(--nav-bg); height: 80px;
     display: flex; justify-content: center; align-items: center; gap: 60px;
     z-index: 2000; border-top: 1px solid #eee;
 }
-
 .nav-item { padding: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
 .nav-item.active { background: #f0f0f0; border-radius: 50%; }
 .nav-item.special { border: 2px solid #333; border-radius: 50%; }
@@ -59,46 +75,13 @@ nav.bottom-nav {
 .icon-eye { background-image: url('Emoji_Camara.png'); }
 .icon-search-nav { background-image: url('Emoji_Lugares.png'); }
 .icon-profile { background-image: url('Emoji_Perfil.png'); }
-/* --- VENTANA EMERGENTE CON FONDO DE PÁGINA --- */
-.overlay-container {
-    position: fixed; top: -100%; left: 0; width: 100%; height: 100%;
-    z-index: 3000; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-    display: flex; justify-content: center; align-items: flex-start;
-}
-.overlay-container.active { top: 0; }
 
-.overlay-glass-card {
-    width: 100%; max-width: 600px; padding: 50px 30px;
-    background: url('Fondo_Blanco_AzulMaya.png') center/cover;
-    border-radius: 0 0 40px 40px; position: relative;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-}
-
-.overlay-glass-card::before {
-    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255,255,255,0.65); backdrop-filter: blur(10px); z-index: -1;
-}
-
-.places-vertical-grid { display: grid; gap: 12px; margin-top: 20px; max-height: 350px; overflow-y: auto; padding: 10px; }
-
-.place-card {
-    display: flex; align-items: center; background: white; padding: 12px;
-    border-radius: 20px; border: 1px solid #eee; cursor: pointer; transition: 0.3s;
-}
-.place-card:hover { transform: translateX(10px); border-color: var(--primary-teal); }
-
-.place-img { width: 70px; height: 70px; border-radius: 15px; object-fit: cover; margin-right: 20px; }
-.place-name { font-weight: 700; font-size: 1.1rem; }
-
-.back-btn-pill { position: absolute; top: 20px; left: 20px; background: white; border: 1px solid #ddd; padding: 10px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; z-index: 100; }
-nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 80px; display: flex; justify-content: center; align-items: center; gap: 60px; z-index: 2000; border-top: 1px solid #eee; }
-.png-emoji { width: 32px; height: 32px; background-size: contain; background-repeat: no-repeat; display: inline-block; }
-.icon-home { background-image: url('Emoji_Casa.png'); }
-.icon-docs { background-image: url('Emoji_Documento.png'); }
-.icon-eye { background-image: url('Emoji_Camara.png'); }
-.icon-search-nav { background-image: url('Emoji_Lugares.png'); }
-.icon-profile { background-image: url('Emoji_Perfil.png'); }
+/* Estilos de tarjetas internas */
+.place-card { display: flex; align-items: center; background: white; padding: 12px; border-radius: 20px; border: 1px solid #eee; margin-bottom: 10px; cursor: pointer; }
+.place-img { width: 75px; height: 75px; border-radius: 15px; object-fit: cover; margin-right: 18px; }
+.place-name { font-weight: 700; }
 </style>
+
 
 </head>
 <body>
@@ -260,9 +243,11 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: whit
 
 <div id="stateOverlay" class="overlay-container">
     <div class="overlay-glass-card">
-        <button class="close-btn" onclick="closeOverlay()">×</button>
+        <button class="close-x-pill" onclick="closeOverlay()">×</button>
+        
         <h2 id="stateTitle">Estado</h2>
         <div class="accent-line"></div>
+        
         <div class="state-content-body">
             <p class="section-label">Destinos Turísticos:</p>
             <div id="touristPlacesList" class="places-vertical-grid"></div>
@@ -294,16 +279,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const overlay = document.getElementById('stateOverlay');
     const placesList = document.getElementById('touristPlacesList');
 
-    // --- LÓGICA TÁCTIL Y ZOOM ---
+    // --- LÓGICA DE MOVIMIENTO (MOUSE + TÁCTIL) ---
     let scale = 1, translateX = 0, translateY = 0;
     let isDragging = false, startX, startY;
-    let initialDist = null; // Para zoom con dos dedos
+    let initialDist = -1;
 
-    function updateMap() {
+    function applyMovement() {
         mapArea.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
     }
 
-    // --- COMENTARIO: SOPORTE PARA MÓVIL (TOUCH) ---
+    // SOPORTE MOUSE (ESCRITORIO)
+    mapArea.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        applyMovement();
+    });
+
+    window.addEventListener('mouseup', () => isDragging = false);
+
+    mapArea.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        scale = Math.min(Math.max(1, scale + delta), 4);
+        applyMovement();
+    });
+
+    // SOPORTE TÁCTIL (MÓVIL)
     mapArea.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
             isDragging = true;
@@ -312,48 +320,77 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (e.touches.length === 2) {
             initialDist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
         }
-    }, {passive: false});
+    });
 
     mapArea.addEventListener('touchmove', (e) => {
-        e.preventDefault();
         if (isDragging && e.touches.length === 1) {
             translateX = e.touches[0].clientX - startX;
             translateY = e.touches[0].clientY - startY;
         } else if (e.touches.length === 2) {
-            const currentDist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
-            const delta = currentDist / initialDist;
-            scale = Math.min(Math.max(1, scale * delta), 4);
-            initialDist = currentDist;
+            const dist = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+            if (initialDist > 0) scale = Math.min(Math.max(1, scale * (dist / initialDist)), 4);
+            initialDist = dist;
         }
-        updateMap();
-    }, {passive: false});
+        applyMovement();
+    });
 
-    mapArea.addEventListener('touchend', () => { isDragging = false; initialDist = null; });
+    mapArea.addEventListener('touchend', () => { isDragging = false; initialDist = -1; });
 
-    // --- LÓGICA DE CLIC (SELECCIÓN DE ESTADO) ---
+    // --- BASE DE DATOS LOCAL ---
+    const passportData = {
+        "MXVER": { name: "Veracruz", items: [
+            { name: "San Juan de Ulúa", id: "veracruz", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/39/5d/b5/20191205-131539-largejpg.jpg?w=300" }
+        ]},
+        "MXYUC": { name: "Yucatán", items: [
+            { name: "Chichén Itzá", id: "chichen-itza", img: "https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=300" },
+            { name: "Uxmal", id: "uxmal", img: "https://images.unsplash.com/photo-1568402102990-bc541580b59f?w=300" }
+        ]},
+        "MXMEX": { name: "Estado de México", items: [
+            { name: "Teotihuacán", id: "teotihuacan", img: "https://images.unsplash.com/photo-1518638150340-f706e86654de?w=300" }
+        ]},
+        "MXROO": { name: "Quintana Roo", items: [
+            { name: "Tulum", id: "tulum", img: "https://images.unsplash.com/photo-1504730655501-24c39ac53f0e?w=300" },
+            { name: "Ruinas El Rey", id: "cancun", img: "https://images.unsplash.com/photo-1602088113235-229c19758e9f?w=300" }
+        ]},
+        "MXCHP": { name: "Chiapas", items: [
+            { name: "Palenque", id: "palenque", img: "https://www.worldhistory.org/img/r/p/1000x1200/3097.jpg.webp?v=1741727705" },
+            { name: "Cañón del Sumidero", id: "sumidero", img: "https://images.unsplash.com/photo-1506466010722-395aa2bef877?w=300" }
+        ]},
+        "MXOAX": { name: "Oaxaca", items: [
+            { name: "Monte Albán", id: "oaxaca", img: "https://images.unsplash.com/photo-1518638150340-f706e86654de?w=300" },
+            { name: "Hierve el Agua", id: "hierve", img: "https://images.unsplash.com/photo-1509204043128-4033327f31be?w=300" }
+        ]},
+        "MXJAL": { name: "Jalisco", items: [
+            { name: "Hospicio Cabañas", id: "guadalajara", img: "https://i0.wp.com/foodandpleasure.com/wp-content/uploads/2024/03/museo-cabanas-en-guadalajara2.jpg?w=300" },
+            { name: "Tequila", id: "tequila", img: "https://images.unsplash.com/photo-1569421115162-8456209b50b8?w=300" }
+        ]},
+        "MXGUA": { name: "Guanajuato", items: [{ name: "Teatro Juárez", id: "guanajuato", img: "https://laverdad.com.mx/wp-content/uploads/2020/03/Dw9fwK3VAAAwSx--1024x659.jpg" }]},
+        "MXPUE": { name: "Puebla", items: [{ name: "Catedral de Puebla", id: "puebla", img: "https://images.trvl-media.com/place/6113676/c5c18e97-bf52-488e-82ce-67db6e1de41f.jpg" }]},
+        "MXCMX": { name: "Ciudad de México", items: [
+            { name: "Templo Mayor", id: "mexico-city", img: "https://images.unsplash.com/photo-1518638150340-f706e86654de?w=300" },
+            { name: "Bellas Artes", id: "bellasartes", img: "https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?w=300" }
+        ]},
+        "MXBCN": { name: "Baja California", items: [{ name: "Valle de Guadalupe", id: "bc", img: "https://images.unsplash.com/photo-1559635156-f83013890250?w=300" }]},
+        "MXCHH": { name: "Chihuahua", items: [{ name: "Barrancas del Cobre", id: "chihuahua", img: "https://images.unsplash.com/photo-1579600161224-3720745f4701?w=300" }]}
+    };
+
+    // CLIC EN ESTADO
     mapArea.addEventListener('click', function(e) {
-        if (Math.abs(translateX - (e.clientX - startX)) > 5) return; // Evita clic si se estaba moviendo
+        if (isDragging) return;
         const target = e.target.closest('path') || e.target.closest('circle');
-        
         if (target && target.id) {
             const data = passportData[target.id];
             if (data) {
                 document.getElementById('stateTitle').innerText = data.name;
                 placesList.innerHTML = data.items.map(p => `
-                    <div class="place-card" onclick="window.location.href='11-MenuContenidoE.html?place=${p.id}'">
-                        <img src="${p.img}" class="place-img" onerror="this.src='https://via.placeholder.com/70'">
-                        <div class="place-name">${p.name}</div>
+                    <div class=\"place-card\" onclick=\"window.location.href='11-MenuContenidoE.html?place=${p.id}'\">
+                        <img src=\"${p.img}\" class=\"place-img\" onerror=\"this.src='https://via.placeholder.com/80'\">
+                        <div class=\"place-name\">${p.name}</div>
                     </div>`).join('');
                 overlay.classList.add('active');
             }
         }
     });
-
-    // Base de datos local abreviada para prueba (Veracruz)
-    const passportData = {
-        "MXVER": { name: "Veracruz", items: [{ name: "San Juan de Ulúa", id: "veracruz", img: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/39/5d/b5/20191205-131539-largejpg.jpg?w=300" }] }
-        // Agrega el resto de los 20 lugares aquí
-    };
 
     window.closeOverlay = () => overlay.classList.remove('active');
 });
