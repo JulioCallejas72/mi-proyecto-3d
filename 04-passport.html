@@ -95,7 +95,11 @@ nav.bottom-nav {
 .icon-eye { background-image: url('Emoji_Camara.png'); }
 .icon-search-nav { background-image: url('Emoji_Lugares.png'); }
 .icon-profile { background-image: url('Emoji_Perfil.png'); }
-
+@media (max-width: 600px) {
+    .container { padding: 20px; margin: 15px; }
+    nav.bottom-nav { gap: 30px; }
+}
+    
 /* Estilos de tarjetas internas */
 .place-card { display: flex; align-items: center; background: white; padding: 12px; border-radius: 20px; border: 1px solid #eee; margin-bottom: 10px; cursor: pointer; }
 .place-img { width: 75px; height: 75px; border-radius: 15px; object-fit: cover; margin-right: 18px; }
