@@ -6,19 +6,22 @@
     <title>AR México - Mi Perfil</title>
     
     <style>
-    /* --- CSS: DISEÑO UNIFICADO Y ESTILO CRISTAL --- */
+        /* El código CSS se insertará aquí */
+        /* --- CSS: PERFIL OPTIMIZADO Y BARRA FIJA --- */
     :root {
         --primary-teal: #4db6ac;
         --nav-bg: #ffffff;
         --text-dark: #333;
         --card-shadow: 0 4px 15px rgba(0,0,0,0.06);
+        --glass-bg: rgba(255, 255, 255, 0.75);
     }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0; padding: 0;
         color: var(--text-dark);
-        padding-bottom: 100px;
+        padding-bottom: 100px; /* Espacio para barra fija */
         min-height: 100vh;
         background-image: url('Fondo_Blanco_AzulMaya.png'); 
         background-size: cover;
@@ -27,96 +30,147 @@
         background-attachment: fixed;
     }
 
+    /* Ajuste de contenedor para móviles */
     .container {
-        max-width: 800px; margin: 30px auto; padding: 40px;
-        background-color: rgba(255, 255, 255, 0.75); 
+        width: 92%;
+        max-width: 800px; 
+        margin: 20px auto; 
+        padding: 30px 20px;
+        background-color: var(--glass-bg); 
         border-radius: 25px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         backdrop-filter: blur(8px);
         text-align: center;
+        overflow: hidden; /* Evita desbordamiento de hijos */
     }
 
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .back-btn { background: #fff; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-    header h1 { font-size: 2.8rem; margin: 0; font-weight: 300; }
-    header h1 b { font-weight: 700; display: block; color: var(--primary-teal); }
+    /* Centrado de Título y Ajuste de Header */
+    .profile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        position: relative;
+    }
 
-    .profile-info { margin-bottom: 40px; }
+    .centered-title {
+        flex-grow: 1;
+        font-size: 2.2rem;
+        font-weight: 300;
+        margin: 0;
+    }
+
+    .centered-title b { font-weight: 700; color: var(--primary-teal); }
+
+    .back-btn {
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10;
+    }
+
+    .header-gear { font-size: 1.5rem; width: 60px; text-align: right; }
+
+    /* Perfil e Info */
+    .profile-info { margin-bottom: 30px; }
     .profile-avatar {
-        width: 100px; height: 100px; background: var(--primary-teal); color: white;
-        font-size: 3rem; display: flex; align-items: center; justify-content: center;
+        width: 90px; height: 90px; background: var(--primary-teal); color: white;
+        font-size: 2.5rem; display: flex; align-items: center; justify-content: center;
         border-radius: 50%; margin: 0 auto 15px; box-shadow: var(--card-shadow);
     }
-    .profile-name { font-size: 1.8rem; margin: 0; color: var(--text-dark); }
 
-    .stats-row { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; }
-    .stat-item { background: white; padding: 15px 25px; border-radius: 15px; box-shadow: var(--card-shadow); min-width: 100px; }
-    .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary-teal); display: block; }
-    .stat-label { font-size: 0.8rem; color: #777; text-transform: uppercase; letter-spacing: 1px; }
+    .stats-row { 
+        display: flex; 
+        justify-content: center; 
+        gap: 15px; 
+        margin-bottom: 30px; 
+        flex-wrap: wrap; /* Ajuste para pantallas pequeñas */
+    }
 
-    .settings-list { display: grid; grid-template-columns: 1fr; gap: 15px; text-align: left; }
+    .stat-item { 
+        background: white; 
+        padding: 15px; 
+        border-radius: 15px; 
+        box-shadow: var(--card-shadow); 
+        flex: 1;
+        min-width: 80px;
+    }
+
+    .stat-value { font-size: 1.3rem; font-weight: bold; color: var(--primary-teal); display: block; }
+    .stat-label { font-size: 0.7rem; color: #777; text-transform: uppercase; }
+
+    /* Lista de Ajustes y PNGs */
+    .settings-list { display: flex; flex-direction: column; gap: 12px; text-align: left; }
     .setting-item {
         display: flex; align-items: center; justify-content: space-between;
-        background: rgba(244, 244, 244, 0.8); padding: 20px; border-radius: 15px;
-        cursor: pointer; transition: 0.2s;
+        background: rgba(244, 244, 244, 0.8); padding: 15px; border-radius: 15px;
+        cursor: pointer;
     }
-    .setting-item:hover { background: #eee; }
-    .setting-content { display: flex; align-items: center; gap: 15px; }
-    .setting-icon { font-size: 1.5rem; background: white; padding: 8px; border-radius: 10px; }
-    .setting-text h4 { margin: 0; font-size: 1rem; }
-    .setting-text p { margin: 0; font-size: 0.8rem; color: #666; }
 
+    .setting-content { display: flex; align-items: center; gap: 12px; }
+    
+    /* Apartado para imágenes PNG de emojis */
+    .setting-icon {
+        width: 35px;
+        height: 35px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .icon-editar { background-image: url('Emoji_Editar.png'); }
+    .icon-copa { background-image: url('Emoji_Copa.png'); }
+    .icon-salida { background-image: url('Emoji_Salida.png'); }
+
+    .setting-text h4 { margin: 0; font-size: 0.95rem; }
+    .setting-text p { margin: 0; font-size: 0.75rem; color: #666; }
+
+    /* Barra de Navegación FIJA */
     nav.bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: var(--nav-bg);
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 60px;
-    z-index: 1000;
-    border-top: 1px solid #eee;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-}
+        position: fixed; 
+        bottom: 0; 
+        left: 0; 
+        right: 0;
+        background: var(--nav-bg);
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15%; /* Espaciado relativo para móviles */
+        z-index: 2000;
+        border-top: 1px solid #eee;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+    }
 
-.nav-item { 
-    padding: 12px; 
-    cursor: pointer; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    transition: var(--transition);
-}
+    .nav-item { padding: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .nav-item.active { background: #f0f0f0; border-radius: 50%; }
+    .nav-item.special { border: 2.5px solid #333; border-radius: 50%; }
 
-.nav-item.active { background: #f0f0f0; border-radius: 50%; }
+    /* Emojis PNG Barra Nav */
+    .png-emoji { width: 30px; height: 30px; background-size: contain; background-repeat: no-repeat; background-position: center; display: inline-block; }
+    .icon-home { background-image: url('Emoji_Casa.png'); }
+    .icon-docs { background-image: url('Emoji_Documento.png'); }
+    .icon-eye { background-image: url('Emoji_Camara.png'); }
+    .icon-search-nav { background-image: url('Emoji_Lugares.png'); }
+    .icon-profile { background-image: url('Emoji_Perfil.png'); }
 
-.nav-item.special { 
-    border: 2px solid #333; 
-    border-radius: 50%; 
-}
-
-    /* Iconos de la Barra de Navegación */
-.nav-icon.png-emoji { width: 32px; height: 32px; }
-.icon-home { background-image: url('Emoji_Casa.png'); }
-.icon-docs { background-image: url('Emoji_Documento.png'); }
-.icon-eye { background-image: url('Emoji_Camara.png'); }
-.icon-search-nav { background-image: url('Emoji_Lugares.png'); }
-.icon-profile { background-image: url('Emoji_Perfil.png'); }
-
-@media (max-width: 600px) {
-    .container { padding: 20px; margin: 15px; }
-    nav.bottom-nav { gap: 30px; }
-}
-</style>
+    @media (max-width: 480px) {
+        .centered-title { font-size: 1.8rem; }
+        .back-btn { padding: 6px 12px; font-size: 0.8rem; }
+        .stats-row { gap: 10px; }
+        nav.bottom-nav { gap: 10%; }
+    }
+    </style>
 </head>
 <body>
 
     <div class="container">
-        <header>
+        <header class="profile-header">
             <button class="back-btn" onclick="window.location.href='02-dashboard.html'">Volver</button>
-            <h1>Mi <b>Perfil</b></h1>
-            <div style="font-size: 1.5rem;">⚙️</div>
+            <h1 class="centered-title">Mi <b>Perfil</b></h1>
+            <div class="header-gear">⚙️</div>
         </header>
 
         <div class="profile-info">
@@ -131,7 +185,7 @@
             </div>
             <div class="stat-item">
                 <span class="stat-value" id="totalModels">0</span>
-                <span class="stat-label">Modelos Totales</span>
+                <span class="stat-label">Modelos</span>
             </div>
             <div class="stat-item">
                 <span class="stat-value" id="totalAchievements">0</span>
@@ -142,7 +196,7 @@
         <div class="settings-list">
             <div class="setting-item" onclick="alert('En desarrollo')">
                 <div class="setting-content">
-                    <div class="setting-icon">✏️</div>
+                    <div class="setting-icon icon-editar"></div>
                     <div class="setting-text">
                         <h4>Editar Perfil</h4>
                         <p>Cambia tu nombre y avatar</p>
@@ -153,7 +207,7 @@
             
             <div class="setting-item" onclick="window.location.href='07-logros.html'">
                 <div class="setting-content">
-                    <div class="setting-icon">🏆</div>
+                    <div class="setting-icon icon-copa"></div>
                     <div class="setting-text">
                         <h4>Logros</h4>
                         <p>Ver tus medallas desbloqueadas</p>
@@ -164,7 +218,7 @@
 
             <div class="setting-item" onclick="logout()">
                 <div class="setting-content">
-                    <div class="setting-icon">🚪</div>
+                    <div class="setting-icon icon-salida"></div>
                     <div class="setting-text">
                         <h4>Cerrar Sesión</h4>
                         <p>Salir de tu cuenta</p>
@@ -194,37 +248,33 @@
     </nav>
 
     <script>
-    /* --- JAVASCRIPT: ACTUALIZACIÓN DE PERFIL Y LOGROS --- */
+        /* El código JavaScript se insertará aquí */
+        /* --- JAVASCRIPT: ACTUALIZACIÓN DE PERFIL Y LOGROS --- */
     
     document.addEventListener('DOMContentLoaded', function() {
         // 1. Cargar nombre de usuario
         const user = localStorage.getItem('username') || 'Usuario';
-        document.getElementById('profileName').textContent = user;
-        document.getElementById('profileAvatar').textContent = user.charAt(0).toUpperCase();
+        const profileName = document.getElementById('profileName');
+        const profileAvatar = document.getElementById('profileAvatar');
+        
+        if (profileName) profileName.textContent = user;
+        if (profileAvatar) profileAvatar.textContent = user.charAt(0).toUpperCase();
         
         // 2. Obtener datos de escaneo desde localStorage
         const scannedPlaces = JSON.parse(localStorage.getItem('scannedPlaces')) || [];
-        const arUsed = localStorage.getItem('arUsed') === 'true'; // Bandera para uso de cámara AR
+        const arUsed = localStorage.getItem('arUsed') === 'true';
         
         // 3. Actualizar estadísticas en tiempo real
-        // Lugares y Modelos se basan en la cantidad de QR escaneados
         document.getElementById('totalPlaces').textContent = scannedPlaces.length;
         document.getElementById('totalModels').textContent = scannedPlaces.length;
         
-        // 4. Calcular cantidad de logros desbloqueados
-        // Reglas de logros solicitadas:
-        // - 1 logro por el primer QR escaneado
-        // - 1 logro por escanear 3 QRs
-        // - 1 logro por usar la cámara AR para ver el modelo
+        // 4. Calcular logros desbloqueados
         let unlockedAchievements = 0;
-        
         if (scannedPlaces.length >= 1) unlockedAchievements++;
         if (scannedPlaces.length >= 3) unlockedAchievements++;
         if (arUsed) unlockedAchievements++;
         
         document.getElementById('totalAchievements').textContent = unlockedAchievements;
-        
-        console.log("Perfil actualizado con", scannedPlaces.length, "escaneos y", unlockedAchievements, "logros.");
     });
 
     function logout() {
@@ -233,6 +283,6 @@
             window.location.href = '01-login.html';
         }
     }
-</script>
+    </script>
 </body>
 </html>
