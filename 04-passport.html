@@ -58,6 +58,10 @@ body {
 .close-x-pill { position: absolute; top: 20px; right: 25px; background: white; border: 1px solid #ddd; width: 45px; height: 45px; border-radius: 50%; font-size: 1.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: var(--transition); }
 .back-btn-pill { position: absolute; top: 20px; left: 20px; background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; z-index: 100; }
 
+.Espacio_titulo{
+    display: flex; align-items: center; background: white; padding: 12px; border-radius: 20px; border: 1px solid #eee; 
+}
+
 nav.bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -104,6 +108,7 @@ nav.bottom-nav {
 .place-card { display: flex; align-items: center; background: white; padding: 12px; border-radius: 20px; border: 1px solid #eee; margin-bottom: 10px; cursor: pointer; }
 .place-img { width: 75px; height: 75px; border-radius: 15px; object-fit: cover; margin-right: 18px; }
 .place-name { font-weight: 700; }
+.section-label{display: flex; align-items: center; background: white; padding: 12px; border-radius: 20px; border: 1px solid #eee;}
 </style>
 
 
@@ -269,9 +274,11 @@ nav.bottom-nav {
     <div class="overlay-glass-card">
         <button class="close-x-pill" onclick="closeOverlay()">×</button>
         
+        <div class ="Espacio_titulo">
         <h2 id="stateTitle">Estado</h2>
         <div class="accent-line"></div>
-        
+        </div>
+
         <div class="state-content-body">
             <p class="section-label">Destinos Turísticos:</p>
             <div id="touristPlacesList" class="places-vertical-grid"></div>
