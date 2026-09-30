@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <!-- NOTA: Aquí deberás enlazar el loader de tu build de Unity cuando lo exportes -->
-    <script src="Build/tu_juego_unity.loader.js"></script>
+    <script src="Build/Tesis.loader.js"></script>
 </head>
 <body>
 
@@ -223,12 +223,12 @@
             // Debes adaptarlo a la versión de Unity que uses.
              
             createUnityInstance(document.querySelector("#unity-canvas"), {
-                dataUrl: "Build/tu_juego.data",
-                frameworkUrl: "Build/tu_juego.framework.js",
-                codeUrl: "Build/tu_juego.wasm",
+                dataUrl: "Build/Tesis.data",
+                frameworkUrl: "Build/Tesis.framework.js",
+                codeUrl: "Build/Tesis.wasm",
                 streamingAssetsUrl: "StreamingAssets",
-                companyName: "TuEmpresa",
-                productName: "Scanner",
+                companyName: "ar-mexico-prototype",
+                productName: "Tesis",
                 productVersion: "1.0",
             }).then((instance) => {
                 unityInstance = instance;
