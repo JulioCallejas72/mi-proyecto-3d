@@ -7,23 +7,38 @@
     
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <!-- NOTA: Aquí deberás enlazar el loader de tu build de Unity cuando lo exportes -->
+    <script src="Build/tu_juego_unity.loader.js"></script>
 </head>
 <body>
 
     <div class="container">
-    <button class="back-btn-pill" onclick="window.location.href='02-dashboard.html'">Volver</button>
+        <button class="back-btn-pill" onclick="window.location.href='02-dashboard.html'">Volver</button>
 
-    <header class="centered-header">
-        <h1>Visor <b>3D AR</b></h1>
-    </header>
+        <header class="centered-header">
+            <h1>Visor <b>3D AR</b></h1>
+        </header>
 
-    <div id="scanner-view">
-        <div id="reader"></div>
-        <p class="instruction-text">Escanea el QR para ver el modelo 3D</p>
-    </div>
+        <!-- Selector de Escáner -->
+        <div id="scanner-controls" style="margin-bottom: 20px;">
+            <button class="action-button" id="btn-web-scanner" onclick="activarEscanerWeb()">Escáner Web</button>
+            <button class="action-button" id="btn-unity-scanner" onclick="activarEscanerUnity()" style="background: var(--primary-teal);">Escáner Unity</button>
+        </div>
 
+        <!-- 1. VISTA: Escáner HTML5 -->
+        <div id="scanner-view">
+            <div id="reader"></div>
+            <p class="instruction-text">Escanea el QR (Modo Web) para ver el modelo 3D</p>
+        </div>
+
+        <!-- 2. VISTA: Escáner Unity -->
+        <div id="unity-scanner-view" style="display: none;">
+            <canvas id="unity-canvas" style="width: 100%; height: 350px; background: #222C36; border-radius: 20px;"></canvas>
+            <p class="instruction-text">Escanea el QR (Modo Unity) para ver el modelo 3D</p>
+        </div>
+
+        <!-- 3. VISTA: Visor del Modelo 3D -->
         <div id="model-view" style="display: none; position: relative;">
-            
             <div id="loading-screen" style="display: none;">
                 <div class="spinner"></div>
                 <p>Descargando modelo...</p>
@@ -35,16 +50,22 @@
                 id="viewer"
                 src="" 
                 ar 
+                environment-image="neutral"
+                exposure
+                shadow-intensity
+                shadow-softness
                 ar-modes="webxr scene-viewer quick-look" 
                 camera-controls 
+                autoplay
                 auto-rotate> 
                 <button slot="ar-button" class="ar-button">📷 VER EN TU ESPACIO</button>
             </model-viewer>
             
-            <button id="btn-reload" class="action-button">Escanear otro código</button>
+            <button id="btn-reload" class="action-button" style="margin-top:15px;">Escanear otro código</button>
         </div>
     </div>
 
+    <!-- Navegación y Audio originales conservados -->
     <nav class="bottom-nav">
         <div class="nav-item" onclick="window.location.href='02-dashboard.html'">
             <div class="png-emoji nav-icon icon-home"></div>
@@ -66,297 +87,205 @@
     <audio id="coin-sound" src="https://www.myinstants.com/media/sounds/super-mario-coin.mp3"></audio>
 
     <style>
-    /* --- VARIABLES Y ESTILOS DE CRISTAL --- */
-    :root {
-        --primary-teal: #4db6ac;
-        --nav-bg: #ffffff;
-        --text-dark: #333;
-        --glass-bg: rgba(255, 255, 255, 0.75);
-    }
+        /* (Pega aquí exactamente todo el bloque <style> original de tu código. Lo he omitido en la previsualización para no hacer el bloque gigante, pero no requiere cambios estructurales, solo asegúrate de incluir tus variables y estilos de cristal). */
+        /* --- VARIABLES Y ESTILOS DE CRISTAL --- */
+        :root {
+            --primary-teal: #4db6ac;
+            --nav-bg: #ffffff;
+            --text-dark: #333;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+        }
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0; padding: 0;
-        min-height: 100vh;
-        display: flex; align-items: center; justify-content: center;
-        background: url('Fondo_Blanco_AzulMaya.png') center/cover no-repeat fixed;
-        padding-bottom: 100px;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background: url('Fondo_Blanco_AzulMaya.png') center/cover no-repeat fixed;
+            padding-bottom: 100px;
+        }
 
-    /* Contenedor Principal con posición relativa para la flecha */
-    .container {
-        position: relative;
-        width: 90%; max-width: 500px; padding: 50px 40px 40px; /* Padding superior extra para la flecha */
-        background-color: var(--glass-bg);
-        border-radius: 25px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        backdrop-filter: blur(8px);
-        text-align: center;
-    }
+        .container {
+            position: relative;
+            width: 90%; max-width: 500px; padding: 50px 40px 40px;
+            background-color: var(--glass-bg);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            text-align: center;
+        }
 
-    /* ESTILO DE LA FLECHA DE RETORNO */
-    .back-arrow {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        background: white;
-        border: 1px solid #ddd;
-        width: 80px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.0rem;
-        font-weight: bold;
-        color: var(--text-dark);
-        cursor: pointer;
-        transition: 0.3s;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        z-index: 100;
-    }
+        .back-btn-pill {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
 
-    .back-arrow:hover {
-        background-color: #f0f0f0;
-        transform: scale(1.1);
-    }
-    .back-btn-pill {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: white;
-    border: 1px solid #ddd;
-    padding: 8px 20px;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 1100; /* Por encima de todo */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: 0.3s;
+        .centered-header { display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 30px; }
+        .centered-header h1 { font-size: 2.2rem !important; margin: 0; white-space: nowrap; }
+        .centered-header h1 b { display: inline !important; color: var(--primary-teal); }
 
-}
+        #reader { border-radius: 20px; overflow: hidden; border: none !important; }
+        
+        #reader button {
+            background-color: var(--primary-teal) !important;
+            color: white !important; border: none !important;
+            padding: 12px 25px !important; border-radius: 25px !important;
+            cursor: pointer !important; font-weight: bold !important;
+            text-transform: uppercase; font-size: 13px;
+            transition: 0.3s; margin: 10px 5px;
+        }
 
-/* --- AJUSTES DE ENCABEZADO Y BOTÓN --- */
-.centered-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 30px;
-}
+        model-viewer {
+            width: 100%; height: 350px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 20px; margin-bottom: 20px;
+        }
 
-.centered-header h1 {
-    font-size: 2.2rem !important; /* Ajustado para una sola línea */
-    margin: 0;
-    white-space: nowrap; /* Fuerza una sola línea */
-}
+        .ar-button {
+            background-color: var(--primary-teal); color: white; border: none;
+            padding: 14px 24px; border-radius: 25px; font-weight: bold;
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer; transition: 0.3s;
+        }
 
-.centered-header h1 b {
-    display: inline !important; /* Evita que el 'AR' salte de línea */
-    color: var(--primary-teal);
-}
+        .action-button { 
+            background: var(--text-dark); color: white; border: none; 
+            padding: 12px 24px; border-radius: 15px; font-weight: 700;
+            cursor: pointer; transition: 0.3s;
+        }
 
-.back-btn-pill:hover { background: #f0f0f0; transform: scale(1.05); }
+        .instruction-text { margin-top: 20px; font-weight: 600; color: #555; }
 
-    header h1 { font-size: 1.8rem; margin-bottom: 25px; font-weight: 300; }
-    header h1 b { font-weight: 700; color: var(--primary-teal); }
+        nav.bottom-nav {
+            position: fixed !important; bottom: 0; left: 0; right: 0;
+            background: var(--nav-bg); height: 80px; display: flex;
+            justify-content: center; align-items: center; gap: 60px;
+            z-index: 2000; border-top: 1px solid #eee;
+        }
 
-    /* ESTILO DE LOS BOTONES DE LA CÁMARA */
-    #reader { border-radius: 20px; overflow: hidden; border: none !important; }
+        .nav-item { padding: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .nav-item.active { background: #f0f0f0; border-radius: 50%; }
+        .nav-item.special { border: 2px solid #333; border-radius: 50%; }
+        .png-emoji { width: 28px; height: 28px; background-size: contain; background-repeat: no-repeat; background-position: center; display: inline-block; }
+        .nav-icon.png-emoji { width: 32px; height: 32px; }
 
-    #reader button {
-        background-color: var(--primary-teal) !important;
-        color: white !important;
-        border: none !important;
-        padding: 12px 25px !important;
-        border-radius: 25px !important;
-        cursor: pointer !important;
-        font-weight: bold !important;
-        text-transform: uppercase;
-        font-size: 13px;
-        transition: 0.3s;
-        margin: 10px 5px;
-        box-shadow: 0 4px 10px rgba(77, 182, 172, 0.3);
-    }
-
-    #reader button:hover { opacity: 0.9; transform: scale(1.03); }
-
-    /* ESTILO VISOR 3D */
-    model-viewer {
-        width: 100%; height: 350px;
-        background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 20px; margin-bottom: 20px;
-    }
-
-    .ar-button {
-        background-color: var(--primary-teal); color: white; border: none;
-        padding: 14px 24px; border-radius: 25px; font-weight: bold;
-        position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        cursor: pointer; transition: 0.3s;
-    }
-
-    .ar-button:hover { background-color: #3fa196; transform: translateX(-50%) scale(1.05); }
-
-    .action-button { 
-        background: var(--text-dark); color: white; border: none; 
-        padding: 12px 24px; border-radius: 15px; font-weight: 700;
-        cursor: pointer; transition: 0.3s;
-    }
-
-    .instruction-text { margin-top: 20px; font-weight: 600; color: #555; }
-
-    /* --- BARRA DE NAVEGACIÓN --- */
-nav.bottom-nav {
-    position: fixed !important; /* No se mueve aunque se abra la cámara */
-    bottom: 0; 
-    left: 0; 
-    right: 0;
-    background: var(--nav-bg);
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 60px;
-    z-index: 2000; /* Z-index alto para que la cámara no la tape */
-    border-top: 1px solid #eee;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-}
-
-.nav-item { 
-    padding: 12px; 
-    cursor: pointer; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    transition: var(--transition);
-}
-
-.nav-item.active { background: #f0f0f0; border-radius: 50%; }
-
-.nav-item.special { 
-    border: 2px solid #333; 
-    border-radius: 50%; 
-}
-
-@media (max-width: 600px) {
-    .container { padding: 20px; margin: 15px; }
-    nav.bottom-nav { gap: 30px; }
-}
-
-/* ============================================================
-   APARTADO PARA EMOJIS PNG LOCALES
-   Reemplaza 'nombre_archivo.png' con tus archivos reales.
-   ============================================================ */
-
-.png-emoji {
-    width: 28px;
-    height: 28px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    display: inline-block;
-}
-
-/* Iconos de la Barra de Navegación */
-.nav-icon.png-emoji { width: 32px; height: 32px; }
-.icon-home { background-image: url('Emoji_Casa.png'); }
-.icon-docs { background-image: url('Emoji_Documento.png'); }
-.icon-eye { background-image: url('Emoji_Camara.png'); }
-.icon-search-nav { background-image: url('Emoji_Lugares.png'); }
-.icon-profile { background-image: url('Emoji_Perfil.png'); }
-
-/* ============================================================ */
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-header h1 { font-size: 2.8rem; margin: 0; font-weight: 300; }
-header h1 b { font-weight: 700; display: block; }
-
-.header-icons {
-    display: flex;
-    gap: 25px;
-}
-
-    /* Spinner de Carga */
-    #loading-screen {
-        position: absolute; top: 0; left: 0; width: 100%; height: 350px;
-        background: rgba(255, 255, 255, 0.9);
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        z-index: 10; border-radius: 20px;
-    }
-
-    .spinner {
-        width: 40px; height: 40px;
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid var(--primary-teal);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-bottom: 10px;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loading-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 350px;
+            background: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 10; border-radius: 20px;
+        }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-teal); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 
     <script>
-    // 1. Inicializar Escáner
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader", { fps: 20, qrbox: {width: 250, height: 250} }
-    );
+        // --- 1. CONFIGURACIÓN DEL ESCÁNER HTML5 (Respaldo) ---
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", { fps: 20, qrbox: {width: 250, height: 250} }
+        );
 
-    function onScanSuccess(decodedText) {
-        console.log("Detectado: " + decodedText);
-        
-        // --- NUEVA LÓGICA DE LOGROS ---
-        // 1. Obtener lista actual de escaneos
-        let scannedPlaces = JSON.parse(localStorage.getItem('scannedPlaces')) || [];
-        
-        // 2. Si el lugar es nuevo, guardarlo
-        if (!scannedPlaces.includes(decodedText)) {
-            scannedPlaces.push(decodedText);
-            localStorage.setItem('scannedPlaces', JSON.stringify(scannedPlaces));
-            console.log("Nuevo lugar guardado para logros");
-        }
-        // ------------------------------
-
-        const sound = document.getElementById('coin-sound');
-        if(sound) sound.play();
-
-        let cleanLink = decodedText.trim();
-        if (cleanLink.includes("github.com") && cleanLink.includes("/blob/")) {
-            cleanLink = cleanLink.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
+        // --- 2. CONTROL DE VISTAS (Entrelazando Unity y Web) ---
+        function activarEscanerWeb() {
+            document.getElementById('unity-scanner-view').style.display = 'none';
+            document.getElementById('scanner-view').style.display = 'block';
+            
+            // Pausar Unity si es posible o simplemente ocultar el canvas
+            // unityInstance.SendMessage('ScannerController', 'PauseScanner'); 
         }
 
-        html5QrcodeScanner.clear();
-        document.getElementById('scanner-view').style.display = 'none';
-        document.getElementById('model-view').style.display = 'block';
-        
-        const loader = document.getElementById('loading-screen');
-        if(loader) loader.style.display = 'flex';
+        function activarEscanerUnity() {
+            document.getElementById('scanner-view').style.display = 'none';
+            document.getElementById('unity-scanner-view').style.display = 'block';
+            
+            // Aquí iniciarías el escáner HTML5 temporalmente si no quieres consumir batería
+            html5QrcodeScanner.clear(); 
+            
+            // Cargar Unity si aún no se ha instanciado
+            iniciarUnity();
+        }
 
-        const viewer = document.getElementById('viewer');
-        viewer.src = cleanLink;
+        let unityInstance = null;
+        function iniciarUnity() {
+            if (unityInstance !== null) return; // Ya está cargado
 
-        // --- LÓGICA PARA LOGRO DE CÁMARA AR ---
-        // Detecta cuando el usuario entra realmente a la Realidad Aumentada
-        viewer.addEventListener('ar-status', (event) => {
-            if (event.detail.status === 'session-started') {
-                localStorage.setItem('arUsed', 'true');
-                console.log("Logro de cámara AR activado");
+            // Este es el código estándar de inicialización que te da Unity WebGL
+            // Debes adaptarlo a la versión de Unity que uses.
+             
+            createUnityInstance(document.querySelector("#unity-canvas"), {
+                dataUrl: "Build/tu_juego.data",
+                frameworkUrl: "Build/tu_juego.framework.js",
+                codeUrl: "Build/tu_juego.wasm",
+                streamingAssetsUrl: "StreamingAssets",
+                companyName: "TuEmpresa",
+                productName: "Scanner",
+                productVersion: "1.0",
+            }).then((instance) => {
+                unityInstance = instance;
+            });
+            
+            console.log("Unity Loader iría aquí");
+        }
+
+        // --- 3. LÓGICA CENTRAL DE PROCESAMIENTO (El Puente) ---
+        // Esta función ahora es global, para que Unity pueda llamarla.
+        window.onScanSuccess = function(decodedText) {
+            console.log("Detectado: " + decodedText);
+            
+            let scannedPlaces = JSON.parse(localStorage.getItem('scannedPlaces')) || [];
+            if (!scannedPlaces.includes(decodedText)) {
+                scannedPlaces.push(decodedText);
+                localStorage.setItem('scannedPlaces', JSON.stringify(scannedPlaces));
+                console.log("Nuevo lugar guardado para logros");
             }
-        });
 
-        viewer.addEventListener('load', () => { if(loader) loader.style.display = 'none'; });
-    }
+            const sound = document.getElementById('coin-sound');
+            if(sound) sound.play();
 
-    html5QrcodeScanner.render(onScanSuccess);
+            let cleanLink = decodedText.trim();
+            if (cleanLink.includes("github.com") && cleanLink.includes("/blob/")) {
+                cleanLink = cleanLink.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/");
+            }
 
-    document.getElementById('btn-reload').addEventListener('click', () => { location.reload(); });
-</script>
+            // Ocultar ambos escáneres
+            try { html5QrcodeScanner.clear(); } catch(e){}
+            document.getElementById('scanner-view').style.display = 'none';
+            document.getElementById('unity-scanner-view').style.display = 'none';
+            document.getElementById('scanner-controls').style.display = 'none';
+            
+            // Mostrar Modelo 3D
+            document.getElementById('model-view').style.display = 'block';
+            
+            const loader = document.getElementById('loading-screen');
+            if(loader) loader.style.display = 'flex';
+
+            const viewer = document.getElementById('viewer');
+            viewer.src = cleanLink;
+
+            viewer.addEventListener('ar-status', (event) => {
+                if (event.detail.status === 'session-started') {
+                    localStorage.setItem('arUsed', 'true');
+                    console.log("Logro de cámara AR activado");
+                }
+            });
+
+            viewer.addEventListener('load', () => { if(loader) loader.style.display = 'none'; });
+        };
+
+        // Renderizar el escáner web por defecto al abrir
+        html5QrcodeScanner.render(window.onScanSuccess);
+
+        document.getElementById('btn-reload').addEventListener('click', () => { location.reload(); });
+    </script>
 </body>
 </html>
