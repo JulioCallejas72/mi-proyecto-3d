@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <!-- NOTA: Aquí deberás enlazar el loader de tu build de Unity cuando lo exportes -->
-    <script src="Build/Tesis.loader.js"></script>
+    <script src="Tesis.loader.js"></script>
 </head>
 <body>
 
@@ -223,9 +223,9 @@
             // Debes adaptarlo a la versión de Unity que uses.
              
             createUnityInstance(document.querySelector("#unity-canvas"), {
-                dataUrl: "Build/Tesis.data",
-                frameworkUrl: "Build/Tesis.framework.js",
-                codeUrl: "Build/Tesis.wasm",
+                dataUrl: "Tesis.data",
+                frameworkUrl: "Tesis.framework.js",
+                codeUrl: "Tesis.wasm",
                 streamingAssetsUrl: "StreamingAssets",
                 companyName: "ar-mexico-prototype",
                 productName: "Tesis",
